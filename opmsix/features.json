@@ -1,0 +1,8 @@
+{
+	"added": [
+		"AutoReset",
+		"RegionLock"
+	],
+	"updated": [],
+	"text": "[BEDWARS]\n\u001b[2;32m[+]\u001b[0m Added AutoReset (resets you sooner when you fall into the void, with an adjustable delay)\n\u001b[2;32m[+]\u001b[0m Added RegionLock (only loads servers whose region code you choose)"
+}
