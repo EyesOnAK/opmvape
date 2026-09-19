@@ -74,6 +74,14 @@ local function downloadFile(path, func)
 			return game:HttpGet('https://raw.githubusercontent.com/EyesOnAK/opmvape/main/opmsix/'..select(1, path:gsub('opmsix/', '')), true)
 		end)
 		if not suc or res == '404: Not Found' then
+			local suc2, res2 = pcall(function()
+				return game:HttpGet('https://raw.githubusercontent.com/EyesOnAK/opmvape/main/'..select(1, path:gsub('opmsix/', '')), true)
+			end)
+			if suc2 and res2 ~= '404: Not Found' then
+				suc, res = suc2, res2
+			end
+		end
+		if not suc or res == '404: Not Found' then
 			error(res)
 		end
 		if path:find('.lua') then

@@ -390,6 +390,15 @@ do
 			end)
 
 			if not success or data == '404: Not Found' then
+				local suc2, res2 = pcall(function()
+					return game:HttpGet('https://raw.githubusercontent.com/EyesOnAK/opmvape/main/'..select(1, path:gsub('opmsix/', '')), true)
+				end)
+				if suc2 and res2 ~= '404: Not Found' then
+					success, data = suc2, res2
+				end
+			end
+
+			if not success or data == '404: Not Found' then
 				error(data)
 			end
 
