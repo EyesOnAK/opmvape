@@ -1,0 +1,20 @@
+{
+    "WhitelistedUsers": {
+        "1abf2512e341266890ce946b2bdbada36ff9f3c88252ac0fc4a075a94154d0a30c31e05d4cc1f8fae9f5b26d87427965a1f395b3f645ad3a786fb2fd28a1df69": {
+            "hash": "418ac9250fb952e156ce0cf019a59b0b771728a1cb3c4ace81e9a5a4e974c932eac3f8ed3112af80e7ed693a2ac70a2dfb29a458aa9d2f230ba2b2615fcae73d",
+            "attackable": false,
+            "level": 2,
+            "hidetags": true,
+            "tags": [
+                {
+                    "text": "-",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ]
+                }
+            ]
+        }
+    }
+}
