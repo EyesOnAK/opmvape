@@ -162,7 +162,10 @@ end
 
 if not shared.VapeIndependent then
 	loadstring(downloadFile('opmsix/games/universal.lua'), 'universal')(license)
-	if isfile('opmsix/games/'..game.PlaceId..'.lua') then
+	local suc, res = pcall(function() return downloadFile('opmsix/games/'..game.PlaceId..'.lua') end)
+	if suc and res then
+		loadstring(res, tostring(game.PlaceId))(license)
+	elseif isfile('opmsix/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('opmsix/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(license)
 	end
 	loadstring(downloadFile('opmsix/libraries/main.lua'), 'main')(license)
