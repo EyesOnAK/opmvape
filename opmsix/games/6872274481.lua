@@ -2957,6 +2957,207 @@ run(function()
 		})
 	end
 	
+	local Killaura
+	local Targets, TargetMode, MaxTargets, CPS, SwingRange, AttackRange, AngleSlider, DelayStep, AttackableCheck, FastHits, AirHitChance, RequireMouseDown, NoSwing, GUICheck, TargetParticles, ShowTarget
+	local attackLoop
+	
+	Killaura = vape.Categories.Blatant:CreateModule({
+		Name = 'Killaura',
+		Function = function(callback)
+			if callback then
+				attackLoop = runService.Heartbeat:Connect(function()
+					if GUICheck.Enabled and not vape.GuiLibrary.MainGui.Visible then return end
+					if RequireMouseDown.Enabled and not inputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then return end
+					
+					local plrs = entitylib.EntityPosition({
+						Range = AttackRange.Value,
+						Part = 'RootPart',
+						Players = Targets.Players,
+						NPCs = Targets.NPCs
+					})
+					
+					if #plrs > 0 then
+						-- Filter by Attackable Check and Angle
+						local validTargets = {}
+						for _, plr in plrs do
+							if AttackableCheck.Enabled then
+								if plr.Humanoid.Health <= 0 then continue end
+								if plr.Character:FindFirstChild("ForceField") then continue end
+							end
+							
+							local localPos = entitylib.character.RootPart.Position
+							local targetPos = plr.RootPart.Position
+							local lookVector = entitylib.character.RootPart.CFrame.LookVector
+							local toTarget = (targetPos - localPos).Unit
+							local angle = math.deg(math.acos(lookVector:Dot(toTarget)))
+							
+							if angle <= AngleSlider.Value then
+								table.insert(validTargets, plr)
+							end
+						end
+						
+						-- Sort by Target Mode
+						if TargetMode.Value == "Distance" then
+							table.sort(validTargets, function(a, b) return (a.RootPart.Position - entitylib.character.RootPart.Position).Magnitude < (b.RootPart.Position - entitylib.character.RootPart.Position).Magnitude end)
+						elseif TargetMode.Value == "Health" then
+							table.sort(validTargets, function(a, b) return a.Humanoid.Health < b.Humanoid.Health end)
+						elseif TargetMode.Value == "Mouse" then
+							local mousePos = inputService:GetMouseLocation()
+							table.sort(validTargets, function(a, b)
+								local aPos = gameCamera:WorldToViewportPoint(a.RootPart.Position)
+								local bPos = gameCamera:WorldToViewportPoint(b.RootPart.Position)
+								local aDist = (Vector2.new(aPos.X, aPos.Y) - mousePos).Magnitude
+								local bDist = (Vector2.new(bPos.X, bPos.Y) - mousePos).Magnitude
+								return aDist < bDist
+							end)
+						end
+						
+						-- Attack Phase
+						local numAttacks = math.min(#validTargets, MaxTargets.Value)
+						for i = 1, numAttacks do
+							local target = validTargets[i]
+							
+							-- Air Hit Chance
+							if target.Humanoid.FloorMaterial == Enum.Material.Air or target.Humanoid:GetState() == Enum.HumanoidStateType.Jumping then
+								if math.random(1, 100) > AirHitChance.Value then continue end
+							end
+							
+							-- Fast Hits logic
+							if FastHits.Enabled then
+								bedwars.Client:Get("FireProjectile"):CallServer({
+									projectile = "arrow",
+									position = target.RootPart.Position,
+									hitEntity = target.Character
+								})
+							end
+							
+							-- Swing and attack
+							if not NoSwing.Enabled then
+								bedwars.SwordController:playSwordEffect(bedwars.AppController:getStore().getState().Inventory.observedInventory.inventory.hand.tool)
+							end
+							
+							bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
+							bedwars.Handler:Get('SwordHit'):Fire('SendToServer', {
+								weapon = bedwars.AppController:getStore().getState().Inventory.observedInventory.inventory.hand.tool,
+								entityInstance = target.Character,
+								validate = {
+									raycast = {
+										cameraPosition = gameCamera.CFrame.Position,
+										cursorDirection = (target.RootPart.Position - gameCamera.CFrame.Position).Unit
+									},
+									targetPosition = target.RootPart.Position,
+									selfPosition = entitylib.character.RootPart.Position
+								}
+							})
+							
+							if TargetParticles.Enabled then
+								local part = Instance.new("Part")
+								part.Size = Vector3.new(1, 1, 1)
+								part.Anchored = true
+								part.CanCollide = false
+								part.Transparency = 1
+								part.Position = target.RootPart.Position
+								part.Parent = workspace
+								game:GetService("Debris"):AddItem(part, 0.5)
+								local emitter = Instance.new("ParticleEmitter")
+								emitter.Texture = "rbxassetid://14736249347"
+								emitter.Rate = 100
+								emitter.Speed = NumberRange.new(5)
+								emitter.Lifetime = NumberRange.new(0.5)
+								emitter.Parent = part
+								emitter:Emit(10)
+							end
+						end
+						
+						if DelayStep.Value > 0 then
+							task.wait(DelayStep.Value)
+						else
+							task.wait(1 / CPS:GetRandomValue())
+						end
+					end
+				end)
+			else
+				if attackLoop then attackLoop:Disconnect() attackLoop = nil end
+			end
+		end,
+		Tooltip = 'Automatically attacks players near you.'
+	})
+	
+	Targets = Killaura:CreateTargets({Players = true, NPCs = false})
+	TargetMode = Killaura:CreateDropdown({
+		Name = 'Target Mode',
+		List = {'Distance', 'Health', 'Mouse'},
+		Default = 'Distance'
+	})
+	CPS = Killaura:CreateTwoSlider({
+		Name = 'CPS',
+		Min = 1,
+		Max = 20,
+		DefaultMin = 10,
+		DefaultMax = 15
+	})
+	SwingRange = Killaura:CreateSlider({
+		Name = 'Swing Range',
+		Min = 1,
+		Max = 20,
+		Default = 18
+	})
+	AttackRange = Killaura:CreateSlider({
+		Name = 'Attack Range',
+		Min = 1,
+		Max = 20,
+		Default = 18
+	})
+	AngleSlider = Killaura:CreateSlider({
+		Name = 'Max Angle',
+		Min = 1,
+		Max = 360,
+		Default = 360
+	})
+	MaxTargets = Killaura:CreateSlider({
+		Name = 'Max targets',
+		Min = 1,
+		Max = 5,
+		Default = 1
+	})
+	DelayStep = Killaura:CreateSlider({
+		Name = 'Delay step',
+		Min = 0,
+		Max = 10,
+		Default = 0,
+		Decimal = 10,
+		Tooltip = 'Adds a slight delay between attack loops.'
+	})
+	FastHits = Killaura:CreateToggle({
+		Name = 'Fast Hits',
+		Tooltip = 'Uses projectiles to add confirmed hits.'
+	})
+	AirHitChance = Killaura:CreateSlider({
+		Name = 'Air Hit Chance',
+		Min = 0,
+		Max = 100,
+		Default = 100,
+		Suffix = '%'
+	})
+	AttackableCheck = Killaura:CreateToggle({
+		Name = 'Attackable check',
+		Tooltip = 'Verifies the target can take damage.'
+	})
+	RequireMouseDown = Killaura:CreateToggle({
+		Name = 'Require mouse down'
+	})
+	NoSwing = Killaura:CreateToggle({
+		Name = 'No Swing',
+		Tooltip = 'Disables swing animations'
+	})
+	GUICheck = Killaura:CreateToggle({
+		Name = 'GUI check',
+		Tooltip = 'Stops attacking if you are in a GUI'
+	})
+	TargetParticles = Killaura:CreateToggle({
+		Name = 'Target particles'
+	})
+
 	ChargeAura = vape.Categories.Combat:CreateModule({
 		Name = 'ChargeAura',
 		Function = function(callback)
