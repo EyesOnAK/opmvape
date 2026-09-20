@@ -68,7 +68,7 @@ run(function()
 						local hit = workspace:Raycast(point + Vector3.new(0, v.Size.Magnitude, 0), Vector3.new(0, -v.Size.Magnitude * 2, 0), include)
 						if hit and hit.Normal.Y > 0.3 then
 							local node = {position = hit.Position + Vector3.new(0, 1, 0), distance = math.huge, links = {}, index = #nodes + 1}
-							local key = `{math.floor(node.position.X / (spacing * 1.5))},{math.floor(node.position.Z / (spacing * 1.5))}`
+							local key = tostring(math.floor(node.position.X / (spacing * 1.5))) .. ',' .. tostring(math.floor(node.position.Z / (spacing * 1.5)))
 							cells[key] = cells[key] or {}
 							table.insert(cells[key], node)
 							table.insert(nodes, node)
@@ -85,7 +85,7 @@ run(function()
 			local x, z = math.floor(v.position.X / (spacing * 1.5)), math.floor(v.position.Z / (spacing * 1.5))
 			for i = x - 1, x + 1 do
 				for i2 = z - 1, z + 1 do
-					for _, v2 in cells[`{i},{i2}`] or {} do
+					for _, v2 in cells[tostring(i) .. ',' .. tostring(i2)] or {} do
 						local offset = v2.position - v.position
 						if v2.index > v.index and offset.Magnitude <= spacing * 1.5 and math.abs(offset.Y) <= spacing and not workspace:Raycast(v.position, offset, params) then
 							table.insert(v.links, v2)
@@ -125,7 +125,7 @@ run(function()
 		local closest = math.huge
 		for i = x - 1, x + 1 do
 			for i2 = z - 1, z + 1 do
-				for _, v in field.cells[`{i},{i2}`] or {} do
+				for _, v in field.cells[tostring(i) .. ',' .. tostring(i2)] or {} do
 					if math.abs(v.position.Y - position.Y) <= field.size then
 						closest = math.min(closest, v.distance + (v.position - position).Magnitude)
 					end

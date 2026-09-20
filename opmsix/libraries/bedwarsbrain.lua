@@ -168,7 +168,7 @@ function controller.Observe(self, snapshot, now)
 	if snapshot.self.safeSurface and snapshot.self.position then
 		local previous = self.Memory.surfaces[#self.Memory.surfaces]
 		if not previous or (previous.position - snapshot.self.position).Magnitude > self.Config.BaseRadius then
-			table.insert(self.Memory.surfaces, {id = `surface:{now}`, kind = 'surface', position = snapshot.self.position, timestamp = now, confidence = 1})
+			table.insert(self.Memory.surfaces, {id = 'surface:' .. tostring(now), kind = 'surface', position = snapshot.self.position, timestamp = now, confidence = 1})
 			if #self.Memory.surfaces > self.Config.MemoryLimit then table.remove(self.Memory.surfaces, 1) end
 		end
 	end
@@ -291,7 +291,7 @@ function controller.Decide(self, now)
 	local candidates = {}
 	local danger = self.Retreating or assessment.score >= config.MaxThreat or state.narrowBridge and assessment.target ~= nil
 	local function add(name, priority, reason, destination, action, emergency, category)
-		local id = `{name}:{destination and destination.id or ''}`
+		local id = tostring(name) .. ':' .. tostring(destination and destination.id or '')
 		local failed = self.Memory.failures[id]
 		if failed and name ~= 'Recover' and (action ~= 'Wait' or destination) and now - failed.timestamp < (failed.count >= config.RecoveryLimit and config.FailureLifetime or config.FailureCooldown * failed.count) then return end
 		priority = (config.Priorities[name] or priority) + (name == 'ReturnToBase' and config.BasePreference or 0)
@@ -375,9 +375,9 @@ function controller.Decide(self, now)
 				local missing = math.max(purchase.cost - ((state.resources or {})[purchase.currency] or 0), 0)
 				for _, v in self.Snapshot.destinations or {} do
 					if missing > 0 and v.kind == 'generator' and v.resource == purchase.currency then
-						add('CollectForPurchase', state.blocks <= config.BlockReserve and 115 or 90, `Need {missing} {purchase.currency} for {purchase.item}`, v, 'Collect')
+						add('CollectForPurchase', state.blocks <= config.BlockReserve and 115 or 90, 'Need ' .. tostring(missing) .. ' ' .. tostring(purchase.currency) .. ' for ' .. tostring(purchase.item), v, 'Collect')
 					elseif missing == 0 and v.kind == (purchase.upgrade and 'upgrade' or 'shop') then
-						add('BuyEquipment', state.blocks <= config.BlockReserve and 116 or 95, `Purchase {purchase.item}; preserve survival reserves`, v, 'Buy')
+						add('BuyEquipment', state.blocks <= config.BlockReserve and 116 or 95, 'Purchase ' .. tostring(purchase.item) .. '; preserve survival reserves', v, 'Buy')
 					end
 				end
 			end
@@ -385,7 +385,7 @@ function controller.Decide(self, now)
 				for _, v in self.Snapshot.destinations or {} do
 					if v.kind == 'generator' and v.resource ~= 'iron' and not assessment.carrying and state.inventorySpace ~= false and assessment.phase ~= 'Early' then
 						if v.resource == 'diamond' and (state.resources.diamond or 0) < config.DiamondTarget or v.resource == 'emerald' and (state.resources.emerald or 0) < config.EmeraldTarget and assessment.ratio >= config.HighHealth and (assessment.support > 0 or assessment.score < config.SafeRouteRisk / 2) then
-							add('CollectResources', v.resource == 'emerald' and 55 or 65, `Collect a useful amount of {v.resource} with an escape`, v, 'Collect', false, 'Optional')
+							add('CollectResources', v.resource == 'emerald' and 55 or 65, 'Collect a useful amount of ' .. tostring(v.resource) .. ' with an escape', v, 'Collect', false, 'Optional')
 						end
 					elseif v.kind == 'enemybed' and self.Snapshot.canBreakBed and not assessment.carrying and assessment.ratio >= config.HighHealth and environment.ownBed == true and state.escapeAvailable then
 						add('AttackBed', 70, 'Healthy, equipped and able to withdraw', v, 'BreakBed', false, 'Optional')

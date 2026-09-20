@@ -127,10 +127,10 @@ local function finishLoading()
 	end))
 
 	if not shared.vapereload then
-		vape:CreateNotification('Finished Loading', (getgenv().catuser and `Authenticated as {getgenv().catuser} with {getgenv().catrole}, ` or '').. (vape.VapeButton and 'Press the button in the top right' or 'Press '..table.concat(vape.GUIBind and vape.GUIBind.Keys or {'RightShift'}, ' + '):upper())..' to open GUI', 5)
+		vape:CreateNotification('Finished Loading', (getgenv().catuser and 'Authenticated as ' .. tostring(getgenv().catuser) .. ' with ' .. tostring(getgenv().catrole) .. ', ' or '').. (vape.VapeButton and 'Press the button in the top right' or 'Press '..table.concat(vape.GUIBind and vape.GUIBind.Keys or {'RightShift'}, ' + '):upper())..' to open GUI', 5)
 		task.delay(0.05 + cloneref(game:GetService('RunService')).PostSimulation:Wait(), function()
 			if shared.updated then
-				vape:CreateNotification('Cat', `Script has updated from {(shared.updated or ""):sub(1, 8)} to {(readfile('opmsix/profiles/commit.txt') or ""):sub(1, 8)}`, 10, 'info')
+				vape:CreateNotification('Cat', 'Script has updated from ' .. tostring((shared.updated or ""):sub(1, 8)) .. ' to ' .. tostring((readfile('opmsix/profiles/commit.txt') or ""):sub(1, 8)), 10, 'info')
 			end
 		end)
 	end

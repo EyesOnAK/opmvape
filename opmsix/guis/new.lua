@@ -204,7 +204,7 @@ local boundscache = {}
 local boundscount = 0
 
 local function getfontbounds(text, size, font, width)
-	local key = typeof(font) == 'Font' and `{text}|{size}|{width or 0}|{font.Family}|{font.Weight.Name}|{font.Style.Name}`
+	local key = typeof(font) == 'Font' and tostring(text) .. '|' .. tostring(size) .. '|' .. tostring(width or 0) .. '|' .. tostring(font.Family) .. '|' .. tostring(font.Weight.Name) .. '|' .. tostring(font.Style.Name)
 	if key and boundscache[key] then return boundscache[key] end
 
 	fontsize.Text = text
@@ -1201,6 +1201,7 @@ function vape:CreateCategory(props)
 	local category = components.Category(props)
 	if props.Name == 'Inventory' or props.Name == 'World' or props.Name == 'Kits' or props.Name == 'Utility' then
 		category.Object.Parent = nil
+		category.Object.Visible = false
 	end
 	yieldBuild()
 
@@ -5107,7 +5108,7 @@ components = {
 				end
 		
 				local list = listModules('', false)
-				countlabel.Text = `<font color="rgb(209,209,209)">{#listModules('', true)}</font> AFFECTED MODULES`
+				countlabel.Text = '<font color="rgb(209,209,209)">' .. tostring(#listModules('', true)) .. '</font> AFFECTED MODULES'
 		
 				for i, v in list do
 					if id ~= refreshid then return end
@@ -5273,7 +5274,7 @@ components = {
 				bar.AnchorPoint = Vector2.new(0.5, 0)
 				bar.BackgroundColor3 = Color3.fromRGB(171, 171, 171)
 				bar.BorderSizePixel = 0
-				bar.Name = `Bar{i}`
+				bar.Name = 'Bar' .. tostring(i)
 				bar.Position = UDim2.new(0.5, 0, 0, (i - 1) * 4)
 				bar.Size = UDim2.fromOffset(v, 2)
 				bar.Parent = filtericon
@@ -5724,7 +5725,7 @@ components = {
 		
 				local function formatValue()
 					local suffix = type(opt.Suffix) == 'function' and opt.Suffix(opt.Value) or opt.Suffix
-					return suffix and `{opt.Value} {suffix}` or tostring(opt.Value)
+					return suffix and tostring(opt.Value) .. ' ' .. tostring(suffix) or tostring(opt.Value)
 				end
 		
 				local value = addValueLabel(row, formatValue(), 4)
@@ -5909,7 +5910,7 @@ components = {
 				title.Name = 'Title'
 				title.Position = UDim2.fromOffset(14, 0)
 				title.Size = UDim2.new(1, -44, 0, 29)
-				title.Text = `{entry.Name} - {opt.Value}`
+				title.Text = tostring(entry.Name) .. ' - ' .. tostring(opt.Value)
 				title.TextColor3 = color.Dark(uipallet.Text, 0.16)
 				title.TextSize = 13
 				title.TextTruncate = Enum.TextTruncate.AtEnd
@@ -6418,7 +6419,7 @@ components = {
 				end
 		
 				local active = getModules()
-				editorcount.Text = `<font color="rgb(209,209,209)">{#listModules('', true)}</font> AFFECTED MODULES`
+				editorcount.Text = '<font color="rgb(209,209,209)">' .. tostring(#listModules('', true)) .. '</font> AFFECTED MODULES'
 		
 				if selectedname and not vape.Modules[selectedname] then
 					selectedname = nil
@@ -9180,12 +9181,12 @@ components = {
 			vape:QueueSave()
 			task.spawn(function()
 				local success, err = xpcall(props.Function, function(err)
-					return `{err}\n{debug.traceback(nil, 2)}`
+					return tostring(err) .. '\\n' .. tostring(debug.traceback(nil, 2))
 				end, self.Enabled)
 		
 				if not success then
-					warn(`[opmvape] {props.Name} errored turning {self.Enabled and 'on' or 'off'} : {err}`)
-					vape:CreateNotification('Vape', `{props.Name} errored, check your console`, 10, 'alert')
+					warn('[opmvape] ' .. tostring(props.Name) .. ' errored turning ' .. tostring(self.Enabled and 'on' or 'off') .. ' : ' .. tostring(err))
+					vape:CreateNotification('Vape', tostring(props.Name) .. ' errored, check your console', 10, 'alert')
 				end
 			end)
 		end
@@ -10011,12 +10012,12 @@ components = {
 			vape:QueueSave()
 			task.spawn(function()
 				local success, err = xpcall(props.Function, function(err)
-					return `{err}\n{debug.traceback(nil, 2)}`
+					return tostring(err) .. '\\n' .. tostring(debug.traceback(nil, 2))
 				end, self.Enabled)
 		
 				if not success then
-					warn(`[opmvape] {props.Name} errored turning {self.Enabled and 'on' or 'off'} : {err}`)
-					vape:CreateNotification('Vape', `{props.Name} errored, check your console`, 10, 'alert')
+					warn('[opmvape] ' .. tostring(props.Name) .. ' errored turning ' .. tostring(self.Enabled and 'on' or 'off') .. ' : ' .. tostring(err))
+					vape:CreateNotification('Vape', tostring(props.Name) .. ' errored, check your console', 10, 'alert')
 				end
 			end)
 		end
@@ -11072,7 +11073,7 @@ components = {
 			end
 			table.sort(active)
 		
-			count.Text = `<font color="rgb(255,255,255)">{#active}</font> AFFECTED MODULES`
+			count.Text = '<font color="rgb(255,255,255)">' .. tostring(#active) .. '</font> AFFECTED MODULES'
 			for i, v in active do
 				rows[v] = addRow(list, v, 0, false, onClick and function()
 					onClick(v)
@@ -11232,7 +11233,7 @@ components = {
 		
 		local function formatOption(value)
 			if type(value) ~= 'table' then return tostring(value) end
-			if value.List then return `{#value.List} items` end
+			if value.List then return tostring(#value.List) .. ' items' end
 			if value.Value ~= nil then
 				if type(value.Value) == 'number' then
 					return tostring(math.floor(value.Value * 10 + 0.5) / 10)
@@ -11241,7 +11242,7 @@ components = {
 				return tostring(value.Value)
 			end
 			if value.Min and value.Max then
-				return `{math.floor(value.Min * 10 + 0.5) / 10} - {math.floor(value.Max * 10 + 0.5) / 10}`
+				return tostring(math.floor(value.Min * 10 + 0.5) / 10) .. ' - ' .. tostring(math.floor(value.Max * 10 + 0.5) / 10)
 			end
 			if value.Enabled ~= nil then return value.Enabled and 'ON' or 'OFF' end
 		
@@ -11250,7 +11251,7 @@ components = {
 				if v == true then on += 1 end
 			end
 		
-			return on > 0 and `{on} on` or '-'
+			return on > 0 and tostring(on) .. ' on' or '-'
 		end
 		
 		local function addOptionRow(parent, name, value, index)
@@ -11709,7 +11710,7 @@ components = {
 					entry.likes = math.max(likes + ((entry.liked and 1 or 0) - (liked and 1 or 0)), 0)
 				else
 					entry.liked, entry.likes = liked, likes
-					vape:CreateNotification('Cat', `Failed to {wanted and 'like' or 'unlike'} "{entry.Name}"`, 8, 'warning')
+					vape:CreateNotification('Cat', 'Failed to ' .. tostring(wanted and 'like' or 'unlike') .. ' "{entry.Name}"', 8, 'warning')
 				end
 		
 				if selected == entry then
@@ -11798,9 +11799,9 @@ components = {
 			card.MouseButton1Click:Connect(function()
 				selected = entry
 				detailname.Text = name
-				detailauthor.Text = `By {author}`
+				detailauthor.Text = 'By ' .. tostring(author)
 				applyAvatar(avatar, entry.discord_pfp)
-				created.Text = `Created: {entry.Uploaded and os.date('%b %d, %Y', entry.Uploaded) or 'unknown'}`
+				created.Text = 'Created: ' .. tostring(entry.Uploaded and os.date('%b %d, %Y', entry.Uploaded) or 'unknown')
 				updatedvalue.Text = relativeDays(entry.Uploaded)
 				downloadsvalue.Text = tostring(entry.downloads or 0)
 				renderVotes(entry)
@@ -11817,7 +11818,7 @@ components = {
 				end
 				table.sort(active)
 		
-				modulecount.Text = `<font color="rgb(255,255,255)">{#active}</font> AFFECTED MODULES`
+				modulecount.Text = '<font color="rgb(255,255,255)">' .. tostring(#active) .. '</font> AFFECTED MODULES'
 		
 				local rows = {}
 				local function selectRow(chosen)
@@ -12127,7 +12128,7 @@ components = {
 			namebox.Text = ''
 			descbox.Text = ''
 			anontoggle:Set(false)
-			derived.Text = `DERIVED FROM <font color="rgb(255,255,255)">{profile or 'Current settings'}</font>`
+			derived.Text = 'DERIVED FROM <font color="rgb(255,255,255)">' .. tostring(profile or 'Current settings') .. '</font>'
 		
 			uploadsource = profileSource(profile)
 			fillModules(uploadmodules, uploadcount, uploadsource)
@@ -12174,7 +12175,7 @@ components = {
 		local function setEditorSource(profile)
 			setSourceMenu(false)
 			editorsource = profileSource(profile)
-			editorderived.Text = `DERIVED FROM <font color="rgb(255,255,255)">{profile or 'Current settings'}</font>`
+			editorderived.Text = 'DERIVED FROM <font color="rgb(255,255,255)">' .. tostring(profile or 'Current settings') .. '</font>'
 			setEditorModules(editorsource)
 		end
 		
@@ -12184,7 +12185,7 @@ components = {
 			editortitle.Text = entry.Name
 			editordesc.Text = (entry.description ~= 'unknown' and entry.description) or ''
 			editorderived.Text = 'DERIVED FROM <font color="rgb(255,255,255)">Published copy</font>'
-			editorstats.Text = `{entry.likes or 0} positive reviews    {entry.downloads or 0} downloads`
+			editorstats.Text = tostring(entry.likes or 0) .. ' positive reviews    ' .. tostring(entry.downloads or 0) .. ' downloads'
 			editoranon:Set(entry.discord_username == 'unknown')
 		
 			setEditorModules(entry.config)
@@ -12319,12 +12320,12 @@ components = {
 			})
 		
 			if res and res.StatusCode and res.StatusCode >= 200 and res.StatusCode < 300 then
-				vape:CreateNotification('Cat', `Published "{namebox.Text}"`, 10, 'info')
+				vape:CreateNotification('Cat', 'Published "{namebox.Text}"', 10, 'info')
 				refresh()
 			else
 				local decoded = res and res.Body and select(2, pcall(httpService.JSONDecode, httpService, res.Body))
 				local reason = type(decoded) == 'table' and type(decoded.errors) == 'table' and type(decoded.errors[1]) == 'table' and select(2, next(decoded.errors[1]))
-				vape:CreateNotification('Cat', reason and `Failed to publish profile: {reason}` or 'Failed to publish profile', 10, 'warning')
+				vape:CreateNotification('Cat', reason and 'Failed to publish profile: ' .. tostring(reason) or 'Failed to publish profile', 10, 'warning')
 			end
 		end)
 		
@@ -12346,11 +12347,11 @@ components = {
 			local entry = selected
 			local content = entry.config or (entry.metadata and entry.metadata.content)
 			if not content then
-				vape:CreateNotification('Cat', `Could not fetch "{entry.Name}"`, 8, 'warning')
+				vape:CreateNotification('Cat', 'Could not fetch "{entry.Name}"', 8, 'warning')
 				return
 			end
 		
-			local profile = `{entry.Name} (@{entry.Author})`
+			local profile = tostring(entry.Name) .. ' (@' .. tostring(entry.Author) .. ')'
 			local profiles = vape.Categories.Profiles
 			if not profiles:GetValue(profile) then
 				profiles:CreateProfile(profile)
@@ -12361,7 +12362,7 @@ components = {
 			vape:Load(true, profile)
 			profiles:ChangeValue()
 			showPanel(nil)
-			vape:CreateNotification('Cat', `Downloaded "{entry.Name}" by {entry.Author}`, 8, 'info')
+			vape:CreateNotification('Cat', 'Downloaded "{entry.Name}" by ' .. tostring(entry.Author), 8, 'info')
 		end)
 		
 		editorcancel.MouseButton1Click:Connect(function()
@@ -12395,10 +12396,10 @@ components = {
 			local body = res and res.Body and httpService:JSONDecode(httpService:JSONDecode(res.Body).response)
 		
 			if body and body.success then
-				vape:CreateNotification('Cat', `Removed "{entry.Name}"`, 8, 'info')
+				vape:CreateNotification('Cat', 'Removed "{entry.Name}"', 8, 'info')
 				refresh()
 			else
-				vape:CreateNotification('Cat', `Failed to remove "{entry.Name}"`, 8, 'warning')
+				vape:CreateNotification('Cat', 'Failed to remove "{entry.Name}"', 8, 'warning')
 			end
 		end)
 		
@@ -12441,12 +12442,12 @@ components = {
 			local content = editorsource or entry.config
 		
 			if not content then
-				vape:CreateNotification('Cat', `Could not read the settings for "{entry.Name}"`, 8, 'warning')
+				vape:CreateNotification('Cat', 'Could not read the settings for "{entry.Name}"', 8, 'warning')
 				return
 			end
 		
 			showPanel(nil)
-			vape:CreateNotification('Cat', `Updating "{entry.Name}"`, 5, 'info')
+			vape:CreateNotification('Cat', 'Updating "{entry.Name}"', 5, 'info')
 		
 			local res = request({
 				Url = 'https://api.opmvape.dev/configs/set',
@@ -12464,10 +12465,10 @@ components = {
 			})
 		
 			if res and res.Body then
-				vape:CreateNotification('Cat', `Updated "{entry.Name}"`, 10, 'info')
+				vape:CreateNotification('Cat', 'Updated "{entry.Name}"', 10, 'info')
 				refresh()
 			else
-				vape:CreateNotification('Cat', `Failed to update "{entry.Name}"`, 10, 'warning')
+				vape:CreateNotification('Cat', 'Failed to update "{entry.Name}"', 10, 'warning')
 			end
 		end)
 		

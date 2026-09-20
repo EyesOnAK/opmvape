@@ -97,8 +97,8 @@ function adapter.new(context, config)
 				beds[owner] = {value = true, timestamp = now, confidence = 1, source = 'event'}
 				if owner == team then
 					foundBed, ownBed, base = v, true, v.Position
-				elseif not v:GetAttribute(`Team{team}NoBreak`) then
-					table.insert(destinations, {id = `bed:{owner}`, kind = 'enemybed', position = v.Position, target = v, owner = owner})
+				elseif not v:GetAttribute('Team' .. tostring(team) .. 'NoBreak') then
+					table.insert(destinations, {id = 'bed:' .. tostring(owner), kind = 'enemybed', position = v.Position, target = v, owner = owner})
 				end
 			end
 			if not foundBed and ownBed == true then ownBed = false end
@@ -121,7 +121,7 @@ function adapter.new(context, config)
 			end
 			for _, v in context.Collection:GetTagged('TeamUpgradeShopkeeper') do
 				if base and (v.Position - base).Magnitude <= config.BedThreatRadius then
-					table.insert(destinations, {id = `upgrade:{tostring(v.Position)}`, kind = 'upgrade', position = v.Position, target = v})
+					table.insert(destinations, {id = 'upgrade:' .. tostring(tostring(v.Position)), kind = 'upgrade', position = v.Position, target = v})
 				end
 			end
 		end
@@ -130,7 +130,7 @@ function adapter.new(context, config)
 		for _, v in destinations do table.insert(snapshot.destinations, v) end
 		for _, v in context.Collection:GetTagged('ItemDrop') do
 			if config.ResourceWeights[v.Name] and (v.Position - root.Position).Magnitude <= config.SupportRadius and not workspace:Raycast(root.Position, v.Position - root.Position, params) then
-				table.insert(snapshot.destinations, {id = `drop:{tostring(v.Position)}`, kind = 'drop', position = v.Position, target = v, resource = v.Name})
+				table.insert(snapshot.destinations, {id = 'drop:' .. tostring(tostring(v.Position)), kind = 'drop', position = v.Position, target = v, resource = v.Name})
 			end
 		end
 		if base then
@@ -208,7 +208,7 @@ function adapter.new(context, config)
 						if v2.position and (destination - v2.position).Magnitude <= config.LethalRange then safe = false end
 					end
 					if safe then
-						snapshot.upperExit = {id = `upper:{tostring(upper.Position)}`, kind = 'surface', position = destination}
+						snapshot.upperExit = {id = 'upper:' .. tostring(tostring(upper.Position)), kind = 'surface', position = destination}
 						snapshot.self.canBuildUp = true
 						break
 					end
@@ -439,7 +439,7 @@ function adapter.new(context, config)
 	end
 
 	function hooks.Log(name, reason)
-		if context.DebugEnabled() then warn(`[opmvape] brain {name} | {reason}`) end
+		if context.DebugEnabled() then warn('[opmvape] brain ' .. tostring(name) .. ' | ' .. tostring(reason)) end
 	end
 
 	return hooks

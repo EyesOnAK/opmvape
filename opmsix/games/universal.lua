@@ -1840,7 +1840,7 @@ run(function()
 		end
 	
 		if applied > 0 then
-			notif('Vape', `Applied {applied} fflag{applied == 1 and '' or 's'}, join a new game for them to take effect`, 12, 'info')
+			notif('Vape', 'Applied '..tostring(applied)..' fflag'..tostring(applied == 1 and '' or 's')..', join a new game for them to take effect', 12, 'info')
 		end
 	end
 	
@@ -1851,7 +1851,7 @@ run(function()
 		end)
 	
 		if not suc or typeof(json) ~= 'table' then
-			notif('Vape', `{source} is not valid fflag json`, 12, 'warning')
+			notif('Vape', tostring(source)..' is not valid fflag json', 12, 'warning')
 			return
 		end
 	
@@ -1860,7 +1860,7 @@ run(function()
 			local entry
 			for _, v2 in prefixes do
 				if typeof(i) == 'string' and #i > #v2 and i:sub(1, #v2) == v2 and (typeof(v) == 'string' or typeof(v) == 'number' or typeof(v) == 'boolean') then
-					entry = `{i}={tostring(v)}`
+					entry = tostring(i)..'='..tostring(v)
 					break
 				end
 			end
@@ -1875,7 +1875,7 @@ run(function()
 		end
 	
 		List:ChangeValue()
-		notif('Vape', `Took {added} fflag{added == 1 and '' or 's'} from {source}{dropped > 0 and `, dropped {dropped} it did not recognise` or ''}`, 12, added > 0 and 'info' or 'warning')
+		notif('Vape', 'Took ' .. tostring(added) .. ' fflag' .. tostring(added == 1 and '' or 's') .. ' from ' .. tostring(source) .. '{dropped > 0 and ', dropped {dropped} it did not recognise" or ''}", 12, added > 0 and 'info' or 'warning')
 	end
 	
 	FFlag = vape.Legit:CreateModule({
@@ -1943,7 +1943,7 @@ run(function()
 				setclipboard(copied)
 			end
 	
-			notif('Vape', packed and `Wrote opmsix/fflags.json and copied {#copied} characters to your clipboard, {math.floor(#copied / #plain * 100)}% of the raw json` or `Wrote opmsix/fflags.json and copied the raw json, packing it did not read back so it was left alone`, 12, packed and 'info' or 'warning')
+			notif('Vape', packed and 'Wrote opmsix/fflags.json and copied '..tostring(#copied)..' characters to your clipboard, '..tostring(math.floor(#copied / #plain * 100))..'% of the raw json' or 'Wrote opmsix/fflags.json and copied the raw json, packing it did not read back so it was left alone', 12, packed and 'info' or 'warning')
 		end
 	})
 	FFlag:CreateButton({

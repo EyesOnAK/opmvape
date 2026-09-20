@@ -1558,9 +1558,9 @@ run(function()
 	
 					local text = 'Ball'
 					if ground then
-						text = `{text} [{math.floor((ground - state.Position).Magnitude)}m]`
+						text = tostring(text) .. ' [' .. tostring(math.floor((ground - state.Position).Magnitude)) .. 'm]'
 						if not rolling then
-							text = `{text} {string.format('%.1f', drop)}s`
+							text = tostring(text) .. ' ' .. tostring(string.format('%.1f', drop)) .. 's'
 						end
 					end
 	
@@ -1775,7 +1775,7 @@ run(function()
 	
 						local text = v.Label
 						if entitylib.isAlive then
-							text = `{text} [{math.floor((v.Goal.Position - entitylib.character.RootPart.Position).Magnitude)}m]`
+							text = tostring(text) .. ' [' .. tostring(math.floor((v.Goal.Position - entitylib.character.RootPart.Position).Magnitude)) .. 'm]'
 						end
 	
 						set.Text.Visible = Nametag.Enabled

@@ -32,7 +32,7 @@ local buildbudget = 0.004
 local run = function(func)
 	xpcall(func, function(err)
 		task.spawn(error, err)
-		vape:CreateNotification('Vape', `A module failed to load: {err}`, 15, 'alert')
+		vape:CreateNotification('Vape', 'A module failed to load: ' .. tostring(err), 15, 'alert')
 	end)
 
 	if os.clock() - buildclock > buildbudget then
@@ -1276,7 +1276,7 @@ run(function()
 		Remote.Remote = AttempedRemote
 
 		if not Success or not Remote.Remote then
-			notif('Cat', `Tried to Get remote {Remote.ID}, remote is invalid`, 15, 'alert')
+			notif('Cat', 'Tried to Get remote ' .. tostring(Remote.ID) .. ', remote is invalid', 15, 'alert')
 			Remote.Remote = nil
 		end
 
@@ -1480,7 +1480,7 @@ run(function()
 								if bedwars.StatusEffectMeta[name] then
 									name = bedwars.StatusEffectMeta[name]
 									for num = 1, 3 do
-										name = name:gsub(`_{num}`, '')
+										name = name:gsub('_' .. tostring(num), '')
 									end
 
 									if bedwars.EnchantMeta[name] then
@@ -1652,7 +1652,7 @@ run(function()
 	calculatePath = function(target, blockpos, solidonly, breakmethod)
 		local origin = entitylib.character.RootPart.Position
 		local cell = bedwars.BlockController:getBlockPosition(origin)
-		local key = `{blockpos.X},{blockpos.Y},{blockpos.Z}|{solidonly and 1 or 0}|{breakmethod == breakmethods.Distance and 1 or 0}`
+		local key = tostring(blockpos.X) .. ',' .. tostring(blockpos.Y) .. ',' .. tostring(blockpos.Z) .. '|' .. tostring(solidonly and 1 or 0) .. '|' .. tostring(breakmethod == breakmethods.Distance and 1 or 0)
 		local cached = pathcache[key]
 		if cached and cached.cell == cell then
 			return cached.pos, cached.cost, cached.path
@@ -2252,7 +2252,7 @@ run(function()
 				if #shown > 0 and not notified then
 					notified = true
 					local meta = bedwars.BedwarsKitMeta[kit]
-					notif('Kits', `This script supports the {(meta and meta.name or kit):lower()} kit!\nModules: {table.concat(shown, ', ')}`, 20, 'info')
+					notif('Kits', 'This script supports the ' .. tostring((meta and meta.name or kit):lower()) .. ' kit!\\nModules: ' .. tostring(table.concat(shown, ', ')), 20, 'info')
 				end
 			end
 			task.wait(1)
@@ -4489,7 +4489,7 @@ run(function()
 					if tick() > paused and entitylib.isAlive and (entitylib.character.Health / entitylib.character.MaxHealth) <= (Threshold.Value / 100) and (tick() - activated) >= Delay.Value then
 						activated = tick()
 						if Notify.Enabled then
-							notif('AntiDeath', `Health below {Threshold.Value}%`, 12, 'warning')
+							notif('AntiDeath', 'Health below ' .. tostring(Threshold.Value) .. '%', 12, 'warning')
 						end
 	
 						if Mode.Value == 'Teleport' then
@@ -4855,7 +4855,7 @@ run(function()
 						if Mode.Value == 'Bed' then
 							local magnitude = BedRange.Value
 							for _, v in collectionService:GetTagged('bed') do
-								if not v:GetAttribute(`Team{lplr:GetAttribute('Team') or -1}NoBreak`) then
+								if not v:GetAttribute('Team' .. tostring(lplr:GetAttribute('Team') or -1) .. 'NoBreak') then
 									local mag = (localPosition - v.Position).Magnitude
 									if mag <= magnitude then
 										aim, magnitude = v.Position, mag
@@ -6678,7 +6678,7 @@ run(function()
 		local level = ent:GetAttribute('Level') or 0
 		local nametag = Instance.new('TextLabel')
 		nametag.Name = name or 'Unknown'
-		nametag.Text = `{nametag.Name}'s beehive | {level} Bee{level >= 2 and 's' or ''}`
+		nametag.Text = tostring(nametag.Name) .. "'s beehive | {level} Bee{level >= 2 and 's' or ''}"
 		nametag.TextSize = 14 * Scale.Value
 		nametag.Font = Enum.Font.Arial
 		local size = getfontbounds(removeTags(nametag.Text), nametag.TextSize, nametag.FontFace)
@@ -6721,7 +6721,7 @@ run(function()
 						if not visible then continue end
 	
 						local level = i:GetAttribute('Level') or 0
-						local text = `{v.Name}'s beehive | {level} Bee{level >= 2 and 's' or ''}`
+						local text = tostring(v.Name) .. "'s beehive | {level} Bee{level >= 2 and 's' or ''}"
 						if v.Text ~= text then
 							v.Text = text
 							local size = getfontbounds(removeTags(text), v.TextSize, v.FontFace)
@@ -6947,7 +6947,7 @@ run(function()
 						v.Visible = visible
 						if not visible then continue end
 	
-						local text = Distance.Enabled and localPosition and `{v.Name} | {((localPosition - part.Position).Magnitude) // 1}m` or v.Name
+						local text = Distance.Enabled and localPosition and tostring(v.Name) .. ' | ' .. tostring(((localPosition - part.Position).Magnitude) // 1) .. 'm' or v.Name
 						if v.Text ~= text then
 							v.Text = text
 							local size = getfontbounds(text, v.TextSize, v.FontFace)
@@ -7133,7 +7133,7 @@ run(function()
 						v.Visible = visible
 						if not visible then continue end
 	
-						local text = Distance.Enabled and localPosition and `{v.Name} | {((localPosition - part.Position).Magnitude) // 1}m` or v.Name
+						local text = Distance.Enabled and localPosition and tostring(v.Name) .. ' | ' .. tostring(((localPosition - part.Position).Magnitude) // 1) .. 'm' or v.Name
 						if v.Text ~= text then
 							v.Text = text
 							local size = getfontbounds(text, v.TextSize, v.FontFace)
@@ -7796,14 +7796,14 @@ run(function()
 			if not ore then return end
 			ore = ore:sub(1, #ore - 2)
 			tier = ore:lower()
-			name = `{ore:sub(1, 1):upper()}{ore:sub(2)} Generator`
+			name = tostring(ore:sub(1, 1):upper()) .. tostring(ore:sub(2)) .. ' Generator'
 		end
 	
 		if Whitelist.Enabled and not table.find(Whitelisted.ListEnabled, tier) then return end
 	
 		local nametag = Instance.new('TextLabel')
 		nametag.Name = name
-		nametag.Text = `{name} | T{ent:GetAttribute('GeneratorLevel') or 0}`
+		nametag.Text = tostring(name) .. ' | T' .. tostring(ent:GetAttribute('GeneratorLevel') or 0)
 		nametag.TextSize = 14 * Scale.Value
 		nametag.Font = Enum.Font.Arial
 		local size = getfontbounds(removeTags(nametag.Text), nametag.TextSize, nametag.FontFace)
@@ -7850,7 +7850,7 @@ run(function()
 	
 						local timer = Cooldown[i]
 						timer = timer and timer.Parent and (timer.Text:match('%[([%d%.]+)%]') or timer.Text:match('([%d%.]+)'))
-						local text = `{v.Name} | T{i:GetAttribute('GeneratorLevel') or 0}{timer and ` | {timer}s` or ''}`
+						local text = tostring(v.Name) .. ' | T' .. tostring(i:GetAttribute('GeneratorLevel') or 0) .. '{timer and ' | {timer}s" or ''}"
 						if v.Text ~= text then
 							v.Text = text
 							local size = getfontbounds(removeTags(text), v.TextSize, v.FontFace)
@@ -8111,7 +8111,7 @@ run(function()
 	
 			if row.Object.Visible then
 				row.Object.Position = UDim2.fromOffset(0, 6 + (shown * 20))
-				row.Value.Text = live and `{math.round(chance.Value * 100)}%` or '--'
+				row.Value.Text = live and tostring(math.round(chance.Value * 100)) .. '%' or '--'
 				row.Value.TextColor3 = (live and ShowColor.Enabled) and Color3.fromHSV(chance.Value * 0.33, 0.75, 1) or Color3.new(1, 1, 1)
 				shown += 1
 			end
@@ -8470,7 +8470,7 @@ run(function()
 		local amount = ent:GetAttribute('Amount') or 1
 		local nametag = Instance.new('TextLabel')
 		nametag.Name = name
-		nametag.Text = `{name}{amount >= 2 and ` x{amount}` or ''}`
+		nametag.Text = tostring(name) .. '{amount >= 2 and ' x{amount}" or ''}"
 		nametag.TextSize = 14 * Scale.Value
 		nametag.Font = Enum.Font.Arial
 		local size = getfontbounds(removeTags(nametag.Text), nametag.TextSize, nametag.FontFace)
@@ -8520,9 +8520,9 @@ run(function()
 						local label = Labels[i]
 	
 						if not label or label.Amount ~= amount or label.Distance ~= mag then
-							local text = `{v.Name}{amount >= 2 and ` x{amount}` or ''}`
+							local text = tostring(v.Name) .. '{amount >= 2 and ' x{amount}" or ''}"
 							if mag then
-								text = `<font color="rgb(85, 255, 85)">[</font><font color="rgb(255, 255, 255)">{mag}</font><font color="rgb(85, 255, 85)">]</font> {text}`
+								text = '<font color="rgb(85, 255, 85)">[</font><font color="rgb(255, 255, 255)">' .. tostring(mag) .. '</font><font color="rgb(85, 255, 85)">]</font> ' .. tostring(text)
 							end
 	
 							Labels[i] = {Amount = amount, Distance = mag}
@@ -10000,13 +10000,13 @@ run(function()
 		local meta = bedwars.getItemSkinMeta(v)
 		local item = meta and meta.itemType and bedwars.ItemMeta[meta.itemType]
 		if item and not item.block then
-			local label = `_{v}_`
+			local label = '_' .. tostring(v) .. '_'
 			for i in meta.itemType:gmatch('[^_]+') do
-				label = label:gsub(`_{i}_`, '_')
+				label = label:gsub('_' .. tostring(i) .. '_', '_')
 			end
 			label = label:gsub('^_+', ''):gsub('_+$', '')
 			label = (tostring(label ~= '' and label or v):gsub('_', ' '):gsub('%a+', function(word)
-				return `{word:sub(1, 1):upper()}{word:sub(2)}`
+				return tostring(word:sub(1, 1):upper()) .. tostring(word:sub(2))
 			end))
 	
 			skins[meta.itemType] = skins[meta.itemType] or {}
@@ -10028,7 +10028,7 @@ run(function()
 	
 	for i, v in groups do
 		names[i] = (tostring(#v > 1 and i or v[1]):gsub('_', ' '):gsub('%a+', function(word)
-			return `{word:sub(1, 1):upper()}{word:sub(2)}`
+			return tostring(word:sub(1, 1):upper()) .. tostring(word:sub(2))
 		end))
 	end
 	table.sort(order, function(a, b)
@@ -10038,7 +10038,7 @@ run(function()
 	for _, v in {'lobby_kaida_claw', 'bear_claws', 'summoner_claw_1', 'summoner_claw_2', 'summoner_claw_3', 'summoner_claw_4'} do
 		if replicatedStorage.Items:FindFirstChild(v) then
 			local label = (tostring((v:gsub('^lobby_', ''))):gsub('_', ' '):gsub('%a+', function(word)
-				return `{word:sub(1, 1):upper()}{word:sub(2)}`
+				return tostring(word:sub(1, 1):upper()) .. tostring(word:sub(2))
 			end))
 			extras[label] = v
 		end
@@ -10555,7 +10555,7 @@ run(function()
 		for i, v in bedwars.TeamUpgradeMeta do
 			local tier = upgrades[i]
 			if tier and tier > 0 then
-				table.insert(bought, `{v.name} {numerals[tier] or tier}`)
+				table.insert(bought, tostring(v.name) .. ' ' .. tostring(numerals[tier] or tier))
 			end
 		end
 	
@@ -10571,7 +10571,7 @@ run(function()
 			end
 		end
 	
-		return `Team {team} | {#bought > 0 and table.concat(bought, ', ') or 'No upgrades'}`
+		return 'Team ' .. tostring(team) .. ' | ' .. tostring(#bought > 0 and table.concat(bought, ', ') or 'No upgrades')
 	end
 	
 	local function Added(obj, tag)
@@ -10581,7 +10581,7 @@ run(function()
 		if not OwnTeam.Enabled and team == lplr:GetAttribute('Team') then return end
 	
 		local nametag = Instance.new('TextLabel')
-		nametag.Name = `Team{team}`
+		nametag.Name = 'Team' .. tostring(team)
 		nametag.Text = getText(team)
 		nametag.TextSize = 14 * Scale.Value
 		nametag.Font = Enum.Font.Arial
@@ -10807,7 +10807,7 @@ run(function()
 						nametag.Visible = visible
 						if not visible then continue end
 	
-						local text = Distance.Enabled and localPosition and `{nametag.Name} | {((localPosition - block.Position).Magnitude) // 1}m` or nametag.Name
+						local text = Distance.Enabled and localPosition and tostring(nametag.Name) .. ' | ' .. tostring(((localPosition - block.Position).Magnitude) // 1) .. 'm' or nametag.Name
 						if nametag.Text ~= text then
 							nametag.Text = text
 							local size = getfontbounds(text, nametag.TextSize, nametag.FontFace)
@@ -11229,7 +11229,7 @@ run(function()
 		Name = 'Clean now',
 		Function = function()
 			local removed = clean()
-			notif('MemoryFixer', `Dropped {removed} leftover connection{removed == 1 and '' or 's'}`, 5)
+			notif('MemoryFixer', 'Dropped ' .. tostring(removed) .. ' leftover connection' .. tostring(removed == 1 and '' or 's'), 5)
 		end
 	})
 end)
@@ -11843,14 +11843,14 @@ run(function()
 		local showlist = expanded and #entries > 0
 		local stuff = {'<b>StaffDetector</b>', '<font size="4"> </font>'}
 		for _, v in {'Spectate', 'Mod', 'Impossible'} do
-			table.insert(stuff, `<font color="{flagcolors[v]}">{v}: {counts[v]}</font>`)
+			table.insert(stuff, '<font color="{flagcolors[v]}">' .. tostring(v) .. ': ' .. tostring(counts[v]) .. '</font>')
 		end
 	
 		if showlist then
 			table.insert(stuff, '<font size="4"> </font>')
 			for i, v in entries do
 				if i > 8 then break end
-				table.insert(stuff, `{v.Name} <font color="{flagcolors[v.Category]}">{v.Reason}</font>`)
+				table.insert(stuff, tostring(v.Name) .. ' <font color="{flagcolors[v.Category]}">' .. tostring(v.Reason) .. '</font>')
 			end
 		end
 	
@@ -11907,7 +11907,7 @@ run(function()
 	end
 	
 	local function noteSpectator(plr, reason)
-		notif('StaffDetector', `Spectator {plr.Name} joined {reason}`, 20, 'warning')
+		notif('StaffDetector', 'Spectator ' .. tostring(plr.Name) .. ' joined ' .. tostring(reason), 20, 'warning')
 		counts.Spectate += 1
 		table.insert(entries, 1, {Name = plr.Name, Reason = 'spectator', Category = 'Spectate'})
 		refreshViewer()
@@ -11926,7 +11926,7 @@ run(function()
 		end
 	
 		if plr.FollowUserId ~= 0 and joined[plr.FollowUserId] then
-			noteSpectator(plr, `following {joined[plr.FollowUserId]}`)
+			noteSpectator(plr, 'following ' .. tostring(joined[plr.FollowUserId]))
 			return
 		end
 	
@@ -11947,7 +11947,7 @@ run(function()
 		end
 	
 		if friend then
-			noteSpectator(plr, `from {friend}`)
+			noteSpectator(plr, 'from ' .. tostring(friend))
 		elseif finished then
 			staffFunction(plr, 'impossible_join')
 			return true
@@ -12160,7 +12160,7 @@ run(function()
 	local previous
 	
 	local function getBed(localPosition)
-		local own = `Team{lplr:GetAttribute('Team') or -1}NoBreak`
+		local own = 'Team' .. tostring(lplr:GetAttribute('Team') or -1) .. 'NoBreak'
 		local closest, mag = nil, Range.Value
 	
 		for _, v in collectionService:GetTagged('bed') do
@@ -12355,7 +12355,7 @@ run(function()
 				if visited[position] or (position * 3 - bed.Position).Magnitude > 18 then continue end
 				local nextblock = blockStore:getBlockAt(position)
 				local meta = nextblock and bedwars.ItemMeta[nextblock.Name]
-				if not meta or not meta.block or nextblock:GetAttribute('NoBreak') or nextblock:GetAttribute(`Team{lplr:GetAttribute('Team') or -1}NoBreak`) or not bedwars.BlockController:isBlockBreakable({blockPosition = position}, lplr) then continue end
+				if not meta or not meta.block or nextblock:GetAttribute('NoBreak') or nextblock:GetAttribute('Team' .. tostring(lplr:GetAttribute('Team') or -1) .. 'NoBreak') or not bedwars.BlockController:isBlockBreakable({blockPosition = position}, lplr) then continue end
 				local data = blockStore:getBlockData(position)
 				local health = data and data:GetAttribute(bedwars.BlockBreaker.blockHealthbar:getHealthKey(nextblock)) or nextblock:GetAttribute('Health') or meta.block.health
 				local damage = bedwars.BlockController:calculateBlockDamage(lplr, {blockPosition = position})
@@ -12838,7 +12838,7 @@ run(function()
 	local function getBedNear()
 		local localPosition = entitylib.character.RootPart.Position
 		for _, v in collectionService:GetTagged('bed') do
-			if (localPosition - v.Position).Magnitude >= 14 or v:GetAttribute(`Team{lplr:GetAttribute('Team') or -1}NoBreak`) then continue end
+			if (localPosition - v.Position).Magnitude >= 14 or v:GetAttribute('Team' .. tostring(lplr:GetAttribute('Team') or -1) .. 'NoBreak') then continue end
 	
 			local handler = bedwars.BlockController:getHandlerRegistry():getHandler(v.Name)
 			local cells = handler and handler:getContainedPositions(v) or {v.Position / 3}
@@ -13572,7 +13572,7 @@ run(function()
 	
 	local function buyItem(item, currencytable)
 		if not id then return end
-		notif('AutoBuy', `Bought {bedwars.ItemMeta[item.itemType].displayName}`, 3)
+		notif('AutoBuy', 'Bought ' .. tostring(bedwars.ItemMeta[item.itemType].displayName), 3)
 		bedwars.Handler:Get('BedwarsPurchaseItem'):Fire('CallServerAsync', {
 			shopItem = item,
 			shopId = id
@@ -13709,7 +13709,7 @@ run(function()
 						if tier.availableOnlyInQueue and not table.find(tier.availableOnlyInQueue, store.queueType) then continue end
 						if not canBuy({currency = 'diamond', price = tier.cost}, currencytable) then break end
 	
-						notif('AutoBuy', `Bought {v.name == 'Armor' and 'Protection' or v.name} {i2}`, 3)
+						notif('AutoBuy', 'Bought ' .. tostring(v.name == 'Armor' and 'Protection' or v.name) .. ' ' .. tostring(i2), 3)
 						bedwars.Handler:Get('RequestPurchaseTeamUpgrade'):Fire('CallServerAsync', i)
 						currencytable.diamond -= tier.cost
 						bought = true
@@ -14632,7 +14632,7 @@ run(function()
 	
 	local function depositStash()
 		local inventory = replicatedStorage:FindFirstChild('Inventories')
-		inventory = inventory and inventory:FindFirstChild(`{lplr.Name}_personal`) or nil
+		inventory = inventory and inventory:FindFirstChild(tostring(lplr.Name) .. '_personal') or nil
 		if not inventory then return end
 	
 		local pending = table.clone(Stash)
@@ -15888,7 +15888,7 @@ run(function()
 	local function getBed()
 		local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
 		for _, v in collectionService:GetTagged('bed') do
-			if (localPosition - v.Position).Magnitude <= 22 and not v:GetAttribute(`Team{lplr:GetAttribute('Team') or -1}NoBreak`) then
+			if (localPosition - v.Position).Magnitude <= 22 and not v:GetAttribute('Team' .. tostring(lplr:GetAttribute('Team') or -1) .. 'NoBreak') then
 				return v
 			end
 		end
@@ -15905,7 +15905,7 @@ run(function()
 			end))
 		end
 	
-		local name = `{plr.DisplayName} ({plr.Name})`
+		local name = tostring(plr.DisplayName) .. ' (' .. tostring(plr.Name) .. ')'
 		if plr:GetAttribute('Team') == lplr:GetAttribute('Team') and not table.find(friends, name) then
 			table.insert(friends, name)
 			FrostySlime:Change(friends)
@@ -15964,7 +15964,7 @@ run(function()
 	local function getBed()
 		local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
 		for _, v in collectionService:GetTagged('bed') do
-			if (localPosition - v.Position).Magnitude <= 22 and not v:GetAttribute(`Team{lplr:GetAttribute('Team') or -1}NoBreak`) then
+			if (localPosition - v.Position).Magnitude <= 22 and not v:GetAttribute('Team' .. tostring(lplr:GetAttribute('Team') or -1) .. 'NoBreak') then
 				return v
 			end
 		end
@@ -16493,7 +16493,7 @@ run(function()
 			Tooltip = v.Tooltip
 		})
 		v.Multiplier = KitExtender:CreateSlider({
-			Name = `{v.Name} multiplier`,
+			Name = tostring(v.Name) .. ' multiplier',
 			Min = 1,
 			Max = 5,
 			Decimal = 10,
@@ -16652,8 +16652,8 @@ run(function()
 		Function = function(callback)
 			if callback then
 				old = {bedwars.Images.ui.hud.viewmodel_crosshair, bedwars.Images.ui.mobile_controls.mobile_crosshairs}
-				bedwars.Images.ui.hud.viewmodel_crosshair = presets[Preset.Value] or tonumber(Image.Value) and `rbxassetid://{Image.Value}` or Image.Value
-				bedwars.Images.ui.mobile_controls.mobile_crosshairs = presets[Preset.Value] or tonumber(Image.Value) and `rbxassetid://{Image.Value}` or Image.Value
+				bedwars.Images.ui.hud.viewmodel_crosshair = presets[Preset.Value] or tonumber(Image.Value) and 'rbxassetid://' .. tostring(Image.Value) or Image.Value
+				bedwars.Images.ui.mobile_controls.mobile_crosshairs = presets[Preset.Value] or tonumber(Image.Value) and 'rbxassetid://' .. tostring(Image.Value) or Image.Value
 			elseif old then
 				bedwars.Images.ui.hud.viewmodel_crosshair = old[1]
 				bedwars.Images.ui.mobile_controls.mobile_crosshairs = old[2]

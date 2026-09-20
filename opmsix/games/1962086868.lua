@@ -207,7 +207,7 @@ run(function()
 											belt = collectionService:HasTag(v2, 'Conveyor') and v2.AssemblyLinearVelocity or nil,
 											finish = workspace:GetPartsInPart(probe, finishoverlap)[1] ~= nil
 										}
-										local key = `{hit.Position.X // 4},{hit.Position.Y // 4},{hit.Position.Z // 4}`
+										local key = tostring(hit.Position.X // 4) .. ',' .. tostring(hit.Position.Y // 4) .. ',' .. tostring(hit.Position.Z // 4)
 										cells[key] = cells[key] or {}
 										table.insert(cells[key], node)
 										table.insert(nodes, node)
@@ -227,7 +227,7 @@ run(function()
 							platforms[v2] = platform
 						end
 						if not platform and (v2:IsA('TrussPart') and math.abs((v2.Size.Y >= math.max(v2.Size.X, v2.Size.Z) and v2.CFrame.UpVector or v2.Size.X >= v2.Size.Z and v2.CFrame.RightVector or v2.CFrame.LookVector).Y) > 0.85 or half.Y <= 0.8) then
-							local key = `{math.floor(v2.Position.X + 0.5)},{math.floor(v2.Position.Z + 0.5)}`
+							local key = tostring(math.floor(v2.Position.X + 0.5)) .. ',' .. tostring(math.floor(v2.Position.Z + 0.5))
 							rungs[key] = rungs[key] or {}
 							table.insert(rungs[key], {v2.Position, half, v2:IsA('TrussPart')})
 						end
@@ -256,7 +256,7 @@ run(function()
 			for i = v.position.X // 4 - 1, v.position.X // 4 + 1 do
 				for i2 = v.position.Y // 4 - 1, v.position.Y // 4 + 1 do
 					for i3 = v.position.Z // 4 - 1, v.position.Z // 4 + 1 do
-						for _, v2 in cells[`{i},{i2},{i3}`] or {} do
+						for _, v2 in cells[tostring(i) .. ',' .. tostring(i2) .. ',' .. tostring(i3)] or {} do
 							local offset = v2.position - v.position
 							local flat = offset * Vector3.new(1, 0, 1)
 							if v2.index > v.index and math.abs(offset.Y) <= math.max(1.2, flat.Magnitude * math.sqrt(1 - rig.slope * rig.slope) / rig.slope) and flat.Magnitude > 0.1 and flat.Magnitude <= math.max(v.spacing, v2.spacing) * 1.5 then
@@ -336,7 +336,7 @@ run(function()
 				for i2 = v.X // 4 - 4, v.X // 4 + 4 do
 					for i3 = (v.Y - 12) // 4, (v.Y + 10) // 4 do
 						for i4 = v.Z // 4 - 4, v.Z // 4 + 4 do
-							for _, v2 in cells[`{i2},{i3},{i4}`] or {} do
+							for _, v2 in cells[tostring(i2) .. ',' .. tostring(i3) .. ',' .. tostring(i4)] or {} do
 								if v2.island ~= node.island and ((v2.position - v) * Vector3.new(1, 0, 1)).Magnitude <= 14 then
 									table.insert(candidates, {v2, ((v2.position - v) * Vector3.new(1, 0, 1)).Magnitude, v, v2.position})
 								end
@@ -365,7 +365,7 @@ run(function()
 				for i = (v.position.X - v.half.X - 4) // 4, (v.position.X + v.half.X + 4) // 4 do
 					for i2 = node.position.Y // 4, (v.top + 2) // 4 do
 						for i3 = (v.position.Z - v.half.Z - 4) // 4, (v.position.Z + v.half.Z + 4) // 4 do
-							for _, v2 in cells[`{i},{i2},{i3}`] or {} do
+							for _, v2 in cells[tostring(i) .. ',' .. tostring(i2) .. ',' .. tostring(i3)] or {} do
 								local count = counts[v2.island] or {0, 0, {}}
 								counts[v2.island] = count
 								if count[1] < 2 and v2.island ~= node.island and v2.position.Y > node.position.Y + 1.5 and v2.position.Y < v.top + 2.5 and (((v2.position - v.position) * Vector3.new(1, 0, 1)):Abs() - v.half):Max(Vector3.zero).Magnitude <= 3.5 then
@@ -496,7 +496,7 @@ run(function()
 					local flat = (v.position - node.position) * Vector3.new(1, 0, 1)
 					local speed = rig.speed + (node.belt and node.belt:Dot(flat.Unit) or 0)
 					local cost = costs[node] + flat.Magnitude / math.max(speed, 0.1)
-					if speed > 3 and cost < (costs[v] or math.huge) and (blocked[`{node.index},{v.index}`] or 0) < 2 then
+					if speed > 3 and cost < (costs[v] or math.huge) and (blocked[tostring(node.index) .. ',' .. tostring(v.index)] or 0) < 2 then
 						costs[v], parents[v] = cost, {from = node, node = v, time = flat.Magnitude / speed}
 						push(heap, {v, cost + (target - v.position).Magnitude / rig.speed * 2})
 					end
@@ -504,7 +504,7 @@ run(function()
 				if node.border then
 					for _, v in node.jumps or getJumps(node) do
 						local cost = costs[node] + v.time + ((node.platform or v.node.platform) and 1.5 or 0.3)
-						if cost < (costs[v.node] or math.huge) and (blocked[`{node.index},{v.node.index}`] or 0) < 2 then
+						if cost < (costs[v.node] or math.huge) and (blocked[tostring(node.index) .. ',' .. tostring(v.node.index)] or 0) < 2 then
 							costs[v.node], parents[v.node] = cost, v
 							push(heap, {v.node, cost + (target - v.node.position).Magnitude / rig.speed * 2})
 						end
@@ -535,7 +535,7 @@ run(function()
 				for i = position.X // 4 - 1, position.X // 4 + 1 do
 					for i2 = position.Y // 4 - 1, position.Y // 4 do
 						for i3 = position.Z // 4 - 1, position.Z // 4 + 1 do
-							for _, v in cells[`{i},{i2},{i3}`] or {} do
+							for _, v in cells[tostring(i) .. ',' .. tostring(i2) .. ',' .. tostring(i3)] or {} do
 								local flat = ((v.position - position) * Vector3.new(1, 0, 1)).Magnitude
 								if flat < distance and v.position.Y > position.Y - 3.5 and v.position.Y < position.Y + 1 then
 									best, distance = v, flat
@@ -605,7 +605,7 @@ run(function()
 					local position = samples[i].position - Vector3.new(0, rig.hover, 0)
 					if (position - last).Magnitude >= 2 then
 						local offset = (position - last) * Vector3.new(1, 0, 1)
-						table.insert(list, offset.Magnitude > 0.1 and workspace:Blockcast(CFrame.lookAt(last, last + offset) + Vector3.new(0, rig.hover, 0) + rig.kills[1][2], rig.kills[1][1], position - last, killparams) and {from = anchor(samples[i], last, `hop{i}`, true), node = anchor(samples[i], position, `demo{i}`, true), time = 0.6, delay = 0, jump = rig.jump, takeoff = 0} or {node = anchor(samples[i], position, `demo{i}`, true), time = (position - last).Magnitude / rig.speed})
+						table.insert(list, offset.Magnitude > 0.1 and workspace:Blockcast(CFrame.lookAt(last, last + offset) + Vector3.new(0, rig.hover, 0) + rig.kills[1][2], rig.kills[1][1], position - last, killparams) and {from = anchor(samples[i], last, 'hop' .. tostring(i), true), node = anchor(samples[i], position, 'demo' .. tostring(i), true), time = 0.6, delay = 0, jump = rig.jump, takeoff = 0} or {node = anchor(samples[i], position, 'demo' .. tostring(i), true), time = (position - last).Magnitude / rig.speed})
 						last = position
 					end
 				end
@@ -636,7 +636,7 @@ run(function()
 						table.insert(path, {samples[i].time - launch, samples[i].position * Vector3.new(1, 0, 1)})
 					end
 				end
-				local from, node, edge = anchor(samples[rise], takeoff, `demo{rise}`, true), anchor(samples[finish], landing, `demo{finish}`), 0
+				local from, node, edge = anchor(samples[rise], takeoff, 'demo' .. tostring(rise), true), anchor(samples[finish], landing, 'demo' .. tostring(finish)), 0
 				local direction = (landing - from.position) * Vector3.new(1, 0, 1)
 				for i = 1, jump > 0 and not from.part and direction.Magnitude > 2 and 6 or 0 do
 					local point = from.position + direction.Unit * (i * 0.25)
@@ -651,7 +651,7 @@ run(function()
 					local position = samples[i].position - Vector3.new(0, rig.hover, 0)
 					if (position - last).Magnitude >= 2 then
 						local offset = (position - last) * Vector3.new(1, 0, 1)
-						table.insert(list, offset.Magnitude > 0.1 and workspace:Blockcast(CFrame.lookAt(last, last + offset) + Vector3.new(0, rig.hover, 0) + rig.kills[1][2], rig.kills[1][1], position - last, killparams) and {from = anchor(samples[i], last, `hop{i}`, true), node = anchor(samples[i], position, `demo{i}`, true), time = 0.6, delay = 0, jump = rig.jump, takeoff = 0} or {node = anchor(samples[i], position, `demo{i}`, true), time = (position - last).Magnitude / rig.speed})
+						table.insert(list, offset.Magnitude > 0.1 and workspace:Blockcast(CFrame.lookAt(last, last + offset) + Vector3.new(0, rig.hover, 0) + rig.kills[1][2], rig.kills[1][1], position - last, killparams) and {from = anchor(samples[i], last, 'hop' .. tostring(i), true), node = anchor(samples[i], position, 'demo' .. tostring(i), true), time = 0.6, delay = 0, jump = rig.jump, takeoff = 0} or {node = anchor(samples[i], position, 'demo' .. tostring(i), true), time = (position - last).Magnitude / rig.speed})
 						last = position
 					end
 				end
@@ -878,7 +878,7 @@ run(function()
 								for i = feet.X // 4 - 2, feet.X // 4 + 2 do
 									for i2 = feet.Y // 4 - 2, feet.Y // 4 + 2 do
 										for i3 = feet.Z // 4 - 2, feet.Z // 4 + 2 do
-											for _, v in cells[`{i},{i2},{i3}`] or {} do
+											for _, v in cells[tostring(i) .. ',' .. tostring(i2) .. ',' .. tostring(i3)] or {} do
 												local flat = ((v.position - feet) * Vector3.new(1, 0, 1)).Magnitude
 												if not (start and start.platform) and flat < distance and math.abs(v.position.Y - feet.Y) < 2 then
 													start, distance = v, flat
@@ -912,7 +912,7 @@ run(function()
 										for _, v in candidates do
 											for i = 1, #v.samples, 3 do
 												local position = v.samples[i].position - Vector3.new(0, rig.hover, 0)
-												for _, v2 in v.samples[i].grounded and cells[`{position.X // 4},{position.Y // 4},{position.Z // 4}`] or {} do
+												for _, v2 in v.samples[i].grounded and cells[tostring(position.X // 4) .. ',' .. tostring(position.Y // 4) .. ',' .. tostring(position.Z // 4)] or {} do
 													if ((v2.position - position) * Vector3.new(1, 0, 1)).Magnitude < 1.5 and math.abs(v2.position.Y - position.Y) < 1.5 then
 														goals[v2] = v
 													end
@@ -951,7 +951,7 @@ run(function()
 					local flat = (entry.node.position - feet) * Vector3.new(1, 0, 1)
 					if os.clock() - began > (entry.time or 0) + ((target or source) and 12 or 2.5) or feet.Y < math.min(entry.node.position.Y, entry.from and entry.from.position.Y or feet.Y) - 6 then
 						if entry.from then
-							blocked[`{entry.from.index},{entry.node.index}`] = (blocked[`{entry.from.index},{entry.node.index}`] or 0) + 2
+							blocked[tostring(entry.from.index) .. ',' .. tostring(entry.node.index)] = (blocked[tostring(entry.from.index) .. ',' .. tostring(entry.node.index)] or 0) + 2
 						end
 						if lplr.Character:FindFirstChild('currentSection') then
 							strikes[lplr.Character.currentSection.Value] = (strikes[lplr.Character.currentSection.Value] or 0) + 1
@@ -1111,7 +1111,7 @@ run(function()
 							if target and hit and hit.Instance == target.part or not target and (flat.Magnitude < 2.5 and math.abs(destination.Y - feet.Y) < 1.5 or flat.Magnitude < 6 and hit and support and hit.Instance == support.Instance) then
 								step, began = step + 1, os.clock()
 							else
-								blocked[`{entry.from.index},{entry.node.index}`] = (blocked[`{entry.from.index},{entry.node.index}`] or 0) + 1
+								blocked[tostring(entry.from.index) .. ',' .. tostring(entry.node.index)] = (blocked[tostring(entry.from.index) .. ',' .. tostring(entry.node.index)] or 0) + 1
 								if lplr.Character:FindFirstChild('currentSection') then
 									strikes[lplr.Character.currentSection.Value] = (strikes[lplr.Character.currentSection.Value] or 0) + 1
 								end

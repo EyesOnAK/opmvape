@@ -103,7 +103,7 @@ function agent.Place(self, grid, now, emergency)
 	end
 	if not placement.Valid and self.TowerJump and now - self.TowerJump < config.JumpCommitTime then return 'pending' end
 	if not placement.Valid or not self.Adapter.ValidatePlacement(placement, self.Route and self.Route.Actions[self.Index + 1]) then
-		self:Fail(`Invalid placement: {placement.Reason or 'collision, movement or escape corridor'}`, now)
+		self:Fail('Invalid placement: ' .. tostring(placement.Reason or 'collision, movement or escape corridor'), now)
 		return 'failed'
 	end
 	self.NextPlace = now + math.max(config.PlacementCooldown, state.placeInterval or 0)

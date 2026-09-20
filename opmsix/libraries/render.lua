@@ -149,7 +149,7 @@ local function getAsset(data)
 	if data == '' or data:find('://') then return data end
 	if not imagecache[data] then
 		if not writefile or not getcustomasset then return '' end
-		local path = `opmsix/assets/drawing/{httpService:GenerateGUID(false)}.png`
+		local path = 'opmsix/assets/drawing/' .. tostring(httpService:GenerateGUID(false)) .. '.png'
 		writefile(path, data)
 		imagecache[data] = getcustomasset(path)
 	end
@@ -429,7 +429,7 @@ renderlib.new = function(class)
 	meta.__newindex = function(_, ind, val)
 		local old = set.Props[ind]
 		if old == nil or ind == 'TextBounds' then return end
-		if typeof(val) ~= typeof(old) then error(`invalid argument #3 to '__newindex' ({typeof(old)} expected, got {typeof(val)})`, 2) end
+		if typeof(val) ~= typeof(old) then error("invalid argument #3 to '__newindex' (" .. tostring(typeof(old)) .. ' expected, got ' .. tostring(typeof(val)) .. ')', 2) end
 
 		set.Props[ind] = ind == 'ZIndex' and math.floor(val) or val
 		if not set.Exists then return end
@@ -443,7 +443,7 @@ renderlib.new = function(class)
 		end
 	end
 	meta.__tostring = function()
-		return `DrawingObject: 0x{address}`
+		return 'DrawingObject: 0x' .. tostring(address)
 	end
 
 	classdata.Shape(set)

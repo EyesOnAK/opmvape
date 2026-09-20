@@ -3,9 +3,9 @@ local buildclock = os.clock()
 local buildbudget = 0.004
 local run = function(func)
 	xpcall(func, function(err)
-		warn(`[opmvape] {err}\n{debug.traceback(nil, 2)}`)
+		warn('[opmvape] ' .. tostring(err) .. '\\n' .. tostring(debug.traceback(nil, 2)))
 		if shared.vape then
-			shared.vape:CreateNotification('Vape', `A module failed to load : {err}`, 15, 'alert')
+			shared.vape:CreateNotification('Vape', 'A module failed to load : ' .. tostring(err), 15, 'alert')
 		end
 	end)
 
@@ -221,7 +221,7 @@ run(function()
 							if bedwars.Client:Get('ClaimMilestoneReward'):CallServer(v.id) then
 								table.insert(claimed, v.id)
 								if Notify.Enabled then
-									notif('ClaimRewards', `Claimed {v.description or v.id}`, 5)
+									notif('ClaimRewards', 'Claimed ' .. tostring(v.description or v.id), 5)
 								end
 							end
 							task.wait(1)
