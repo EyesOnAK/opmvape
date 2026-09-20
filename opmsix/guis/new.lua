@@ -1199,6 +1199,9 @@ end
 
 function vape:CreateCategory(props)
 	local category = components.Category(props)
+	if props.Name == 'Inventory' or props.Name == 'World' or props.Name == 'Kits' or props.Name == 'Utility' then
+		category.Object.Parent = nil
+	end
 	yieldBuild()
 
 	return category
