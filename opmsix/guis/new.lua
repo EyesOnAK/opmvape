@@ -1841,26 +1841,7 @@ function vape:LoadGUI()
 		Icon = getvapeasset('opmsix/assets/new/render.png'),
 		Size = UDim2.fromOffset(15, 14)
 	})
-	vape:CreateCategory({
-		Name = 'Utility',
-		Icon = getvapeasset('opmsix/assets/new/utility.png'),
-		Size = UDim2.fromOffset(15, 14)
-	})
-	vape:CreateCategory({
-		Name = 'World',
-		Icon = getvapeasset('opmsix/assets/new/world.png'),
-		Size = UDim2.fromOffset(14, 14)
-	})
-	vape:CreateCategory({
-		Name = 'Inventory',
-		Icon = getvapeasset('opmsix/assets/new/inventory.png'),
-		Size = UDim2.fromOffset(15, 14)
-	})
-	vape:CreateCategory({
-		Name = 'Kits',
-		Icon = getvapeasset('opmsix/assets/new/friends.png'),
-		Size = UDim2.fromOffset(17, 16)
-	})
+
 	vape.Categories.Main:CreateDivider({
 		Text = 'misc'
 	})

@@ -10894,36 +10894,6 @@ run(function()
 	
 end)
 
-run(function()
-	local AntiEffect
-	local Dizzy
-	local Fear
-	local Vignettes
-	local oldvignettes
-	
-		
-	Dizzy = AntiEffect:CreateToggle({
-		Name = 'Dizzy',
-		Default = true,
-		Tooltip = 'Stops the dizzy toad swinging your walk direction around, the slow itself is on the server'
-	})
-	Fear = AntiEffect:CreateToggle({
-		Name = 'Werewolf fear',
-		Default = true,
-		Tooltip = 'Stops the werewolf tail walking you away from it'
-	})
-	Vignettes = AntiEffect:CreateToggle({
-		Name = 'Vignettes',
-		Function = function(callback)
-			if AntiEffect.Enabled and callback then
-				oldvignettes = bedwars.VignetteController.enableOnScreenEffects
-				bedwars.VignetteController.enableOnScreenEffects = false
-				bedwars.VignetteController:destroyAllVignettes()
-			elseif AntiEffect.Enabled and oldvignettes ~= nil then
-				bedwars.VignetteController.enableOnScreenEffects = oldvignettes
-				oldvignettes = nil
-			end
-		end,
 		Default = true,
 		Tooltip = 'Clears the coloured screen border frozen, decay, soaked and the rest put over your view'
 	})
@@ -11012,113 +10982,8 @@ run(function()
 	
 	end)
 
-run(function()
-	local AutoBlockUp
-	local LimitItem
-	local lastPlace = 0
-	local up = false
-	
-		
-	LimitItem = AutoBlockUp:CreateToggle({Name = 'Limit to items'})
-end)
 
-run(function()
-	local AutoCollect
-	local Collectables
-	local Range
-	local Delay
-	local Animation
-	
-	local Request = bedwars.Handler:Get('CollectCollectableEntity')
-	local cooldowns = {}
-	
-		
-	Range = AutoCollect:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 20,
-		Default = 11,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end,
-		Tooltip = 'The server drops collects past 12 studs'
-	})
-	Delay = AutoCollect:CreateSlider({
-		Name = 'Delay',
-		Min = 0.05,
-		Max = 1,
-		Default = 0.1,
-		Decimal = 100,
-		Suffix = 'seconds'
-	})
-	Animation = AutoCollect:CreateToggle({
-		Name = 'Animation',
-		Default = true,
-		Tooltip = 'Plays the pickup animation'
-	})
-	Collectables = AutoCollect:CreateTextList({
-		Name = 'Collectables',
-		Default = {
-			'alchemist_ingedients',
-			'alchemy_crystal',
-			'crystalheart_seed',
-			'forest_environment_plant',
-			'jailor_soul',
-			'murder_coin',
-			'shadow_coin',
-			'soulvine_seed',
-			'spirit_gardener_energy',
-			'spirit_gardener_seeds',
-			'tearbloom_seed'
-		},
-		Darker = true,
-		Tooltip = 'Collectable tags to pick up, stars and hidden metal have their own modules'
-	})
-end)
 
-run(function()
-	local AutoCounter
-	local Range
-	local Limit
-	local AutoSwitch = {}
-	
-		BackDelay = AutoPearl:CreateTwoSlider({
-		Name = 'Switch Back Delay',
-		Min = 0,
-		Max = 2,
-		DefaultMin = 0.1,
-		DefaultMax = 0.2,
-		Darker = true
-	})
-	Distance = AutoPearl:CreateSlider({
-		Name = 'Distance limit',
-		Min = 10,
-		Max = 300,
-		Default = 150,
-		Suffix = 'studs',
-		Tooltip = 'How far an enemy pearl can land before Aggro ignores it'
-	})
-	MinHealth = AutoPearl:CreateSlider({
-		Name = 'Min health',
-		Min = 0,
-		Max = 100,
-		Default = 0,
-		Tooltip = 'Never throws below this health, 0 disables the check'
-	})
-	Cooldown = AutoPearl:CreateSlider({
-		Name = 'Cooldown',
-		Min = 0,
-		Max = 5,
-		Default = 1,
-		Decimal = 10,
-		Suffix = 'seconds',
-		Tooltip = 'Minimum gap between two throws'
-	})
-	Limit = AutoPearl:CreateToggle({
-		Name = 'Limit to item',
-		Tooltip = 'Only throws pearl when holding a pearl'
-	})
-end)
 
 run(function()
 	local AutoPlay
@@ -11147,23 +11012,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoReset
-	local Delay
-	
-		
-	Delay = AutoReset:CreateSlider({
-		Name = 'Delay',
-		Min = 0,
-		Max = 2,
-		Default = 0,
-		Decimal = 10,
-		Suffix = function(value)
-			return value == 1 and 'second' or 'seconds'
-		end,
-		Tooltip = 'How long to wait before resetting. 0 resets instantly'
-	})
-end)
 
 run(function()
 	local AutoShoot
@@ -11292,107 +11140,13 @@ run(function()
 	end)
 end)
 
-run(function()
-	local AutoVoidDrop
-	local OwlCheck
-	
-		
-	OwlCheck = AutoVoidDrop:CreateToggle({
-		Name = 'Owl check',
-		Default = true,
-		Tooltip = 'Refuses to drop items if being picked up by an owl'
-	})
-end)
 
-run(function()
-	local AutoVote
-	local Option
-	local Delay
-	local Notify
-	
-	local Request = bedwars.Handler:Get('CastPregameVote')
-	local voted
-	
-		
-	Option = AutoVote:CreateSlider({
-		Name = 'Option',
-		Min = 1,
-		Max = 4,
-		Default = 1,
-		Tooltip = 'Which of the voting options to pick, counting from the left'
-	})
-	Delay = AutoVote:CreateSlider({
-		Name = 'Delay',
-		Min = 0.5,
-		Max = 10,
-		Default = 1,
-		Decimal = 10,
-		Suffix = 'seconds'
-	})
-	Notify = AutoVote:CreateToggle({
-		Name = 'Notify',
-		Default = true,
-		Tooltip = 'Tells you when the vote goes in'
-	})
-	
-end)
 
-run(function()
-	local DeviceSpoofer
-	local Device
-	local oldDevice, old
-	
-		
-	Device = DeviceSpoofer:CreateDropdown({
-		Name = 'Device',
-		List = {'Mobile', 'PC', 'Gamepad'},
-		Function = function(val)
-			if DeviceSpoofer.Enabled then
-				bedwars.Handler:Get('SendUserInputType'):Fire('SendToServer', {userInputType = val:upper()})
 			end
 		end
 	})
 end)
 
-run(function()
-	local KnockbackDelay
-	local Chance
-	local AirDelay
-	local GroundDelay
-	local TargetCheck
-	
-	local old, rand
-	local function apply(type, env, ...)
-		local root, mass, dir, knockback = ...
-		knockback = knockback and table.clone(knockback) or {}
-		knockback[type] = env[type] and knockback[type] or 0
-		return old(root, mass, dir, knockback, select(5, ...))
-	end
-	
-		
-	Chance = KnockbackDelay:CreateSlider({
-		Name = 'Chance',
-		Min = 1,
-		Max = 100,
-		Suffix = '%',
-		Default = 40
-	})
-	AirDelay = KnockbackDelay:CreateTwoSlider({
-		Name = 'Air delay',
-		Min = 0,
-		Max = 500,
-		DefaultMin = 50,
-		DefaultMax = 200
-	})
-	GroundDelay = KnockbackDelay:CreateTwoSlider({
-		Name = 'Ground delay',
-		Min = 0,
-		Max = 500,
-		DefaultMin = 50,
-		DefaultMax = 200
-	})
-	TargetCheck = KnockbackDelay:CreateToggle({Name = 'Target check'})
-end)
 
 run(function()
 	local LeaveParty; end)
@@ -11683,29 +11437,6 @@ run(function()
 	
 	end)
 
-run(function()
-	local PickupRange
-	local Range
-	local Network
-	local Lower
-	local Picked = {}
-	
-		
-	Range = PickupRange:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 10,
-		Default = 10,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
-	})
-	Network = PickupRange:CreateToggle({
-		Name = 'Network TP',
-		Default = true
-	})
-	Lower = PickupRange:CreateToggle({Name = 'Feet Check'})
-end)
 
 run(function()
 	local RegionLock
@@ -12345,69 +12076,10 @@ run(function()
 	end)
 end)
 
-run(function()
-		
-	TrapSnap = TrapDisabler:CreateToggle({
-		Name = 'Snap traps',
-		Default = true,
-		Tooltip = 'Stops trapper snap traps from marking you'
-	})
-	TrapMine = TrapDisabler:CreateToggle({
-		Name = 'Landmines',
-		Default = true,
-		Tooltip = 'Stops invisible landmines from detonating on you'
-	})
-	TrapTeleport = TrapDisabler:CreateToggle({
-		Name = 'Teleport blocks',
-		Tooltip = 'Stops teleport blocks from moving you'
-	})
-	TrapPortal = TrapDisabler:CreateToggle({
-		Name = 'Void portals',
-		Tooltip = 'Stops void portals from moving you, this also blocks your own'
-	})
-end)
 
 run(function()
 	end)
 
-run(function()
-	local AutoBedDefense
-	local Repair
-	local Upgrade
-	local Range
-	local Reserve
-	
-	local holding, held
-	
-		
-	Range = AutoBedDefense:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 30,
-		Default = 14,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Reserve = AutoBedDefense:CreateSlider({
-		Name = 'Reserve',
-		Min = 0,
-		Max = 64,
-		Default = 0,
-		Suffix = 'iron',
-		Tooltip = 'Iron to leave alone for the shop'
-	})
-	Repair = AutoBedDefense:CreateToggle({
-		Name = 'Repair',
-		Default = true,
-		Tooltip = 'Replaces the layers an enemy broke, 5 iron each'
-	})
-	Upgrade = AutoBedDefense:CreateToggle({
-		Name = 'Upgrade',
-		Default = true,
-		Tooltip = 'Buys the next defense tier once the defense is whole again'
-	})
-end)
 
 run(function()
 	local AutoTool
@@ -13479,20 +13151,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local FastPlace
-	local CPS
-	
-		
-	CPS = FastPlace:CreateSlider({
-		Name = 'Cps',
-		Min = 1,
-		Max = 100,
-		Function = function(val)
-			if FastPlace.Enabled then
-				bedwars.SharedConstants.BLOCK_PLACE_CPS = val
-			end
-		end,
 		Default = 13
 	})
 	FastPlace:CreateButton({
@@ -13832,31 +13490,6 @@ run(function()
 	
 end)
 
-run(function()
-	local ArmorSwitch
-	local Mode
-	local Targets
-	local Range
-	
-		
-	Mode = ArmorSwitch:CreateDropdown({
-		Name = 'Mode',
-		List = {'Toggle', 'On Key'}
-	})
-	Targets = ArmorSwitch:CreateTargets({
-		Players = true,
-		NPCs = true
-	})
-	Range = ArmorSwitch:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 30,
-		Default = 30,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
-	})
-end)
 
 run(function()
 	local AutoBuy
@@ -15063,92 +14696,7 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoCard
-	local Range
-	local Delay
-	local nextThrow = 0
-	
-		
-	Range = AutoCard:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 100,
-		Default = 60,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Delay = AutoCard:CreateSlider({
-		Name = 'Delay',
-		Min = 0.1,
-		Max = 3,
-		Default = 0.4,
-		Decimal = 10,
-		Suffix = function(val)
-			return val <= 1 and 'sec' or 'secs'
-		end
-	})
-end)
 
-run(function()
-	local AutoCogsworth
-	local Targets
-	local Collect
-	local Steal
-	local Range
-	local Delay
-	local Overclock
-	local OverclockRange
-	local nextCollect = 0
-	local nextOverclock = 0
-	
-	local function getBots()
-		local controller = bedwars.GatherBotBasicController
-		return controller and controller.gatherBotMap or {}
-	end
-	
-		
-	Targets = AutoCogsworth:CreateTargets({
-		Players = true,
-		NPCs = true
-	})
-	Collect = AutoCogsworth:CreateToggle({
-		Name = 'Collect bots',
-		Default = true,
-		Tooltip = 'The games own collect prompt stops at 10 studs, the server never checks it'
-	})
-	Steal = AutoCogsworth:CreateToggle({
-		Name = 'Steal enemy bots',
-		Tooltip = 'Also empties gather bots that somebody else placed'
-	})
-	Range = AutoCogsworth:CreateSlider({
-		Name = 'Range',
-		Min = 5,
-		Max = 500,
-		Default = 250,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Delay = AutoCogsworth:CreateSlider({
-		Name = 'Delay',
-		Min = 0.1,
-		Max = 3,
-		Default = 0.3,
-		Decimal = 100,
-		Suffix = function(val)
-			return val <= 1 and 'sec' or 'secs'
-		end
-	})
-	Overclock = AutoCogsworth:CreateToggle({
-		Name = 'Overclock',
-		Default = true,
-		Function = function(callback)
-			if OverclockRange then
-				OverclockRange.Object.Visible = callback
-			end
-		end
 	})
 	OverclockRange = AutoCogsworth:CreateSlider({
 		Name = 'Overclock range',
@@ -15162,29 +14710,6 @@ run(function()
 	
 end)
 
-run(function()
-	local AutoCrocowolf
-	local Range
-	local Targets
-	
-		
-	Range = AutoCrocowolf:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 60,
-		Default = 30,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Targets = AutoCrocowolf:CreateSlider({
-		Name = 'Targets',
-		Min = 1,
-		Max = 8,
-		Default = 1,
-		Tooltip = 'Enemies in range before transforming'
-	})
-end)
 
 run(function()
 	local AutoCyber
@@ -15307,29 +14832,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoDragonSword
-	local Range
-	local Targets
-	
-		
-	Range = AutoDragonSword:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 60,
-		Default = 25,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Targets = AutoDragonSword:CreateSlider({
-		Name = 'Targets',
-		Min = 1,
-		Max = 8,
-		Default = 1,
-		Tooltip = 'Enemies in range before using the ultimate'
-	})
-end)
 
 run(function()
 	local AutoDrill
@@ -15452,26 +14954,6 @@ run(function()
 	updateAttackControls()
 end)
 
-run(function()
-	local AutoElder
-	local Streamer
-	local Range
-	local Animation
-	local Delay
-	
-	local Legit = getFunctionRange(bedwars.EldertreeController.createTreeOrbInteraction) or 10
-	local cooldowns = {}
-	
-		
-	Streamer = AutoElder:CreateToggle({
-		Name = 'Streamer mode',
-		Function = function(call)
-			if Delay then
-				Delay.Object.Visible = not call
-				Range.Object.Visible = not call
-				Animation.Object.Visible = not call
-			end
-		end,
 		Tooltip = 'Useful for when ur screensharing'
 	})
 	Animation = AutoElder:CreateToggle({
@@ -15572,66 +15054,7 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoElektra
-	local Targets
-	local Range
-	local Face
-	local nextDash = 0
-	
-		
-	Targets = AutoElektra:CreateTargets({
-		Players = true,
-		NPCs = true,
-		Walls = true
-	})
-	Range = AutoElektra:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 60,
-		Default = 25,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Face = AutoElektra:CreateToggle({
-		Name = 'Face target',
-		Default = true,
-		Tooltip = 'Turns you at them first so the dash actually goes through them'
-	})
-	
-end)
 
-run(function()
-	local AutoEmber
-	local Targets
-	local Range
-	local Delay
-	local Limit
-	
-		
-	Targets = AutoEmber:CreateTargets({
-		Players = true,
-		NPCs = false
-	})
-	Delay = AutoEmber:CreateSlider({
-		Name = 'Delay',
-		Min = 0,
-		Max = 1,
-		Default = 0.1,
-		Decimal = 100
-	})
-	Range = AutoEmber:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 22,
-		Default = 22,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Limit = AutoEmber:CreateToggle({Name = 'Limit to item'})
-end)
 
 run(function()
 	local AutoEquipKit
@@ -15656,43 +15079,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoEvelynn
-	local Range
-	local Delay
-	local EnemyCheck
-	
-	local Legit = getFunctionRange(bedwars.SpiritAssassinController.onKitLocalActivated) or 120
-	
-		
-	Range = AutoEvelynn:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 120,
-		Default = 60,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	AutoEvelynn:CreateButton({
-		Name = 'Sync to legit range',
-		Function = function()
-			Range:SetValue(Legit)
-		end
-	})
-	Delay = AutoEvelynn:CreateSlider({
-		Name = 'Delay',
-		Min = 0,
-		Max = 2,
-		Default = 0.1,
-		Decimal = 10,
-		Suffix = 'seconds'
-	})
-	EnemyCheck = AutoEvelynn:CreateToggle({
-		Name = 'Enemy check',
-		Tooltip = 'Only eats a spirit while somebody is still standing next to it'
-	})
-end)
 
 run(function()
 	local AutoFarmer
@@ -15776,23 +15162,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoFlora
-	local Mode
-	local Height
-	local Speed
-	local nextGlide = 0
-	
-		
-	Mode = AutoFlora:CreateDropdown({
-		Name = 'Mode',
-		List = {'Void', 'Any Drop'},
-		Default = 'Void',
-		Function = function(val)
-			if Height then
-				Height.Object.Visible = val == 'Any Drop'
-			end
-		end,
 		Tooltip = 'Void - only when there is no floor at all under you\nAny Drop - also for long falls onto the map'
 	})
 	Height = AutoFlora:CreateSlider({
@@ -15815,64 +15184,7 @@ run(function()
 	
 end)
 
-run(function()
-	local AutoFreiya
-	local Range
-	local Stacks
-	local Delay
-	
-	local cooldown = 0
-	
-		
-	Range = AutoFreiya:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 60,
-		Default = 40,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Delay = AutoFreiya:CreateSlider({
-		Name = 'Delay',
-		Min = 0,
-		Max = 2,
-		Default = 0,
-		Decimal = 100,
-		Suffix = 'seconds'
-	})
-	Stacks = AutoFreiya:CreateSlider({
-		Name = 'Stacks',
-		Min = 1,
-		Max = 10,
-		Default = 3,
-		Tooltip = 'Ice stacks an enemy needs before detonating'
-	})
-end)
 
-run(function()
-	local AutoGingerbread
-	local Range
-	local Delay
-	local Break
-	local Place
-	local PlaceDelay
-	local Jump
-	local Switch
-	local OwnOnly
-	local SuccessfulOnly
-	
-	local old
-	local nextPlace = 0
-	
-		
-	Place = AutoGingerbread:CreateToggle({
-		Name = 'Place pads',
-		Function = function(call)
-			if PlaceDelay then
-				PlaceDelay.Object.Visible = call
-			end
-		end,
 		Tooltip = 'Drops a bounce pad into the cell below you whenever it is empty, so a jump lands you straight back onto one',
 		Default = true
 	})
@@ -15937,67 +15249,7 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoGrim
-	local Range
-	local Health
-	local Delay
-	
-	local Legit = getFunctionRange(bedwars.GrimReaperController.registerSoulInteractions) or 0
-	
-		
-	Range = AutoGrim:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 120,
-		Default = 12,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	AutoGrim:CreateButton({
-		Name = 'Sync to legit range',
-		Function = function()
-			Range:SetValue(Legit)
-		end
-	})
-	Health = AutoGrim:CreateSlider({
-		Name = 'Health',
-		Min = 1,
-		Max = 100,
-		Default = 25,
-		Suffix = function()
-			return '%'
-		end,
-		Tooltip = 'Only eats a soul once your health drops to this share of your maximum'
-	})
-	Delay = AutoGrim:CreateSlider({
-		Name = 'Delay',
-		Min = 0,
-		Max = 2,
-		Default = 0.1,
-		Decimal = 10,
-		Suffix = 'seconds'
-	})
-end)
 
-run(function()
-	local AutoGrove
-	local Delay
-	local nextWater = 0
-	
-		
-	Delay = AutoGrove:CreateSlider({
-		Name = 'Delay',
-		Min = 0.5,
-		Max = 20,
-		Default = 3,
-		Decimal = 10,
-		Suffix = function(val)
-			return val <= 1 and 'sec' or 'secs'
-		end
-	})
-end)
 
 run(function()
 	local AutoHannah
@@ -16035,17 +15287,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoHephaestus
-	local Summon
-	local lastRepair, lastSummon = 0, 0
-	
-		
-	Summon = AutoHephaestus:CreateToggle({
-		Name = 'Summon tinker',
-		Tooltip = 'Calls the machine back whenever you are not mounted on it'
-	})
-end)
 
 run(function()
 	local AutoKaida
@@ -16715,28 +15956,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoPyro
-	local Delay
-	
-	local list = {'Range', 'Heat', 'Power'}
-	
-		
-	Delay = AutoPyro:CreateSlider({
-		Name = 'Delay',
-		Min = 0,
-		Max = 2,
-		Default = 0.1,
-		Decimal = 100,
-		Suffix = 'seconds',
-		Tooltip = 'Wait between each upgrade it buys'
-	})
-	for _, v in list do
-		AutoPyro:CreateToggle({
-			Name = `Buy {v}`,
-			Default = true
-		})
-	end
 end)
 
 run(function()
@@ -16873,37 +16092,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local CryptAura
-	local Range
-	local Delay
-	local nextClaim = 0
-	
-	local claimed = setmetatable({}, {__mode = 'k'})
-	
-	local Activate = bedwars.Handler:Get('ActivateGravestone')
-	
-		
-	Range = CryptAura:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 40,
-		Default = 12,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	Delay = CryptAura:CreateSlider({
-		Name = 'Delay',
-		Min = 0.1,
-		Max = 3,
-		Default = 0.3,
-		Decimal = 10,
-		Suffix = function(val)
-			return val <= 1 and 'sec' or 'secs'
-		end
-	})
-end)
 
 run(function()
 	local DaveyAim
@@ -17350,90 +16538,12 @@ run(function()
 	})
 end)
 
-run(function()
-	local AutoPickpocket
-	local Targets
-	local Range
-	local Hidden
-	
-	local Legit = getFunctionRange(bedwars.MimicController.onKitLocalActivated) or 25
-	local mimicPickPocket = bedwars.Handler:Get('MimicBlockPickPocketPlayer')
-	local sounds = {bedwars.SoundList.MIMIC_PICKPOCKET_1, bedwars.SoundList.MIMIC_PICKPOCKET_2, bedwars.SoundList.MIMIC_PICKPOCKET_3}
-	local random = Random.new()
-	local attempted = setmetatable({}, {__mode = 'k'})
-	local ready, warned = false, 0
-	
-		
-	Targets = AutoPickpocket:CreateTargets({Players = true, Walls = true})
-	
-	Range = AutoPickpocket:CreateSlider({
-		Name = 'Range',
-		Min = 1,
-		Max = 30,
-		Default = Legit,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end
-	})
-	AutoPickpocket:CreateButton({
-		Name = 'Sync to legit range',
-		Function = function()
-			Range:SetValue(Legit)
-		end
-	})
-	Hidden = AutoPickpocket:CreateToggle({
-		Name = 'Hide when clear',
-		Tooltip = 'Goes back into the block once nobody is in range'
-	})
-end)
 
 run(function()
 	local RavenTP
 	
 	end)
 
-run(function()
-	local VoidRegentAutoClutch
-	local Range
-	local Depth
-	local FallSpeed
-	local FaceGround
-	local lastClutch = 0
-	
-		
-	Range = VoidRegentAutoClutch:CreateSlider({
-		Name = 'Range',
-		Min = 10,
-		Max = 60,
-		Default = 45,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end,
-		Tooltip = 'How far to look for ground to dash back to'
-	})
-	Depth = VoidRegentAutoClutch:CreateSlider({
-		Name = 'Depth',
-		Min = 10,
-		Max = 150,
-		Default = 60,
-		Suffix = function(val)
-			return val <= 1 and 'stud' or 'studs'
-		end,
-		Tooltip = 'Nothing beneath you within this counts as the void'
-	})
-	FallSpeed = VoidRegentAutoClutch:CreateSlider({
-		Name = 'Fall speed',
-		Min = 0,
-		Max = 100,
-		Default = 10,
-		Tooltip = 'Only clutches once you are dropping this fast'
-	})
-	FaceGround = VoidRegentAutoClutch:CreateToggle({
-		Name = 'Face ground',
-		Default = true,
-		Tooltip = 'Turns you towards the ground first, the dash always goes where you face'
-	})
-end)
 
 run(function()
 	local VulcanAssist

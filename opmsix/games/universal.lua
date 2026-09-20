@@ -6395,42 +6395,11 @@ run(function()
 	})
 end)
 
-run(function()
-	local AntiRagdoll
-	
-	AntiRagdoll = vape.Categories.Utility:CreateModule({
-		Name = 'AntiRagdoll',
-		Function = function(callback)
-			if entitylib.isAlive then
-				entitylib.character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, not callback)
-			end
-	
-			if callback then
-				AntiRagdoll:Clean(entitylib.Events.LocalAdded:Connect(function(char)
-					char.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-				end))
-			end
 		end,
 		Tooltip = 'Prevents you from getting knocked down in a ragdoll state'
 	})
 end)
 
-run(function()
-	local AutoRejoin
-	local Sort
-	
-	AutoRejoin = vape.Categories.Utility:CreateModule({
-		Name = 'AutoRejoin',
-		Function = function(callback)
-			if callback then
-				local check
-				AutoRejoin:Clean(guiService.ErrorMessageChanged:Connect(function(str)
-					if (not check or guiService:GetErrorCode() ~= Enum.ConnectionError.DisconnectLuaKick) and guiService:GetErrorCode() ~= Enum.ConnectionError.DisconnectConnectionLost and not str:lower():find('ban') then
-						check = true
-						serverHop(nil, Sort.Value)
-					end
-				end))
-			end
 		end,
 		Tooltip = 'Automatically rejoins into a new server if you get disconnected / kicked'
 	})
@@ -6510,26 +6479,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local ChatSpammer
-	local Lines
-	local Mode
-	local Delay
-	local Hide
-	local RandomList = {}
-	local oldchat
-	
-	ChatSpammer = vape.Categories.Utility:CreateModule({
-		Name = 'ChatSpammer',
-		Function = function(callback)
-			if callback then
-				if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-					if Hide.Enabled and coreGui:FindFirstChild('ExperienceChat') then
-						ChatSpammer:Clean(coreGui.ExperienceChat.appLayout.chatWindow.contentFrame.scrollingView.bottomLockedScrollView.scrollView.ChildAdded:Connect(function(msg)
-							if msg.Name:sub(1, 2) == '0-' and msg.TextMessage.BodyText.Text == '<font color="#d4d4d4">You must wait before sending another message.</font>' then
-								msg.Visible = false
-							end
-						end))
 					end
 				elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
 					if Hide.Enabled then
@@ -6611,45 +6560,11 @@ run(function()
 	})
 end)
 
-run(function()
-	local Disabler
-	
-	local function characterAdded(char)
-		for _, v in getconnections(char.RootPart:GetPropertyChangedSignal('CFrame')) do
-			hookfunction(v.Function, function() end)
-		end
-	
-		for _, v in getconnections(char.RootPart:GetPropertyChangedSignal('Velocity')) do
-			hookfunction(v.Function, function() end)
-		end
-	end
-	
-	Disabler = vape.Categories.Utility:CreateModule({
-		Name = 'Disabler',
-		Function = function(callback)
-			if callback then
-				Disabler:Clean(entitylib.Events.LocalAdded:Connect(characterAdded))
-				if entitylib.isAlive then
-					characterAdded(entitylib.character)
-				end
-			end
 		end,
 		Tooltip = 'Disables GetPropertyChangedSignal detections for movement'
 	})
 end)
 
-run(function()
-	local time = tick()
-	local Panic; Panic = vape.Categories.Utility:CreateModule({
-		Name = 'Panic',
-		Function = function(callback)
-			if callback then
-				if time > tick() then
-					for _, v in vape.Modules do
-						if v.Enabled then
-							v:Toggle()
-						end
-					end
 				else
 					notif('Panic', 'Re-enable panic to confirm', 5, 'info')
 					time = tick() + 1
@@ -6661,39 +6576,11 @@ run(function()
 	})
 end)
 
-run(function()
-	local Rejoin
-	
-	Rejoin = vape.Categories.Utility:CreateModule({
-		Name = 'Rejoin',
-		Function = function(callback)
-			if callback then
-				notif('Rejoin', 'Rejoining...', 5)
-				Rejoin:Toggle()
-	
-				if playersService.NumPlayers > 1 then
-					teleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId)
-				else
-					teleportService:Teleport(game.PlaceId)
-				end
-			end
 		end,
 		Tooltip = 'Rejoins the server'
 	})
 end)
 
-run(function()
-	local ServerHop
-	local Sort
-	
-	ServerHop = vape.Categories.Utility:CreateModule({
-		Name = 'ServerHop',
-		Function = function(callback)
-			if callback then
-				ServerHop:Toggle()
-				serverHop(nil, Sort.Value)
-			end
-		end,
 		Tooltip = 'Teleports into a unique server'
 	})
 	
@@ -6852,21 +6739,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local connections = {}
-	
-	vape.Categories.World:CreateModule({
-		Name = 'Anti-AFK',
-		Function = function(callback)
-			if callback then
-				for _, v in getconnections(lplr.Idled) do
-					table.insert(connections, v)
-					v:Disable()
-				end
-			else
-				for _, v in connections do
-					v:Enable()
-				end
 				table.clear(connections)
 			end
 		end,
@@ -6874,23 +6746,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local Freecam
-	local Value
-	local randomkey, module, old = httpService:GenerateGUID(false)
-	local controls, touchUp = nil, 0
-	
-	Freecam = vape.Categories.World:CreateModule({
-		Name = 'Freecam',
-		Function = function(callback)
-			if callback then
-				repeat
-					task.wait(0.1)
-					for _, v in getconnections(gameCamera:GetPropertyChangedSignal('CameraType')) do
-						if v.Function then
-							module = debug.getupvalue(v.Function, 1)
-						end
-					end
 				until module or not Freecam.Enabled
 	
 				if module and module.activeCameraController and Freecam.Enabled then
@@ -6969,36 +6824,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local Gravity
-	local Mode
-	local Value
-	local changed, old = false
-	
-	Gravity = vape.Categories.World:CreateModule({
-		Name = 'Gravity',
-		Function = function(callback)
-			if callback then
-				if Mode.Value == 'Workspace' then
-					old = workspace.Gravity
-					workspace.Gravity = Value.Value
-					Gravity:Clean(workspace:GetPropertyChangedSignal('Gravity'):Connect(function()
-						if changed then return end
-						changed = true
-						old = workspace.Gravity
-						workspace.Gravity = Value.Value
-						changed = false
-					end))
-				else
-					Gravity:Clean(runService.PreSimulation:Connect(function(dt)
-						if entitylib.isAlive and entitylib.character.Humanoid.FloorMaterial == Enum.Material.Air then
-							local root = entitylib.character.RootPart
-							if Mode.Value == 'Impulse' then
-								root:ApplyImpulse(Vector3.new(0, dt * (workspace.Gravity - Value.Value), 0) * root.AssemblyMass)
-							else
-								root.AssemblyLinearVelocity += Vector3.new(0, dt * (workspace.Gravity - Value.Value), 0)
-							end
-						end
 					end))
 				end
 			else
@@ -7031,22 +6856,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local Parkour
-	
-	Parkour = vape.Categories.World:CreateModule({
-		Name = 'Parkour',
-		Function = function(callback)
-			if callback then
-				local oldfloor
-				Parkour:Clean(runService.RenderStepped:Connect(function()
-					if entitylib.isAlive then
-						local material = entitylib.character.Humanoid.FloorMaterial
-						if material == Enum.Material.Air and oldfloor ~= Enum.Material.Air then
-							entitylib.character.Humanoid.Jump = true
-						end
-						oldfloor = material
-					end
 				end))
 			end
 		end,
@@ -7175,21 +6984,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local rayCheck = RaycastParams.new()
-	rayCheck.RespectCanCollide = true
-	local module, old
-	
-	vape.Categories.World:CreateModule({
-		Name = 'SafeWalk',
-		Function = function(callback)
-			if callback then
-				if not module then
-					local suc = pcall(function()
-						module = require(lplr.PlayerScripts.PlayerModule).controls
-					end)
-					if not suc then module = {} end
-				end
 	
 				old = module.moveFunction
 				module.moveFunction = function(self, vec, face)
